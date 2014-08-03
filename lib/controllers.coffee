@@ -21,10 +21,11 @@
 _path = require('path')
 _bpars = require('body-parser')
 _router = require('express').Router()
-_routes = require _path.join('..', '..', '..', 'config', 'routes')
+_root = _path.join(_path.dirname(require.main.filename), '..') # project's root
+_routes = require _path.join(_root, 'config', 'routes')
 
 # Path to controllers directory.
-rootPath = _path.join(__dirname, '..', '..', '..', 'app', 'controllers')
+rootPath = _path.join(_root, 'app', 'controllers')
 
 # Loads middlewares for parsing request data These middlewares populates the
 # `req.body` variable which is available to every controller (route callback).

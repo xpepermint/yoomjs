@@ -19,9 +19,10 @@
 #
 
 _path = require('path')
+_root = _path.join(_path.dirname(require.main.filename), '..') # project's root
 
 # Defined connectors.
-connectors = require _path.join(__dirname, '..', '..', '..', 'config', 'connectors')
+connectors = require _path.join(_root, 'config', 'connectors')
 
 # Database connections.
 connections = {}

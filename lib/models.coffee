@@ -36,9 +36,6 @@ _ = require('underscore')
 _path = require('path')
 _fs = require('fs')
 
-# Path to controllers directory.
-rootPath = _path.join(__dirname, '..', '..', '..', 'app', 'models')
-
 # Variable where list of loaded models will be stored
 models = {}
 

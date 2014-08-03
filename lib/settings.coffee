@@ -17,8 +17,9 @@
 
 _path = require('path')
 _extend = require('util')._extend
+_root = _path.join(_path.dirname(require.main.filename), '..') # project's root
 
-settings = require _path.join(__dirname, '..', '..', '..', 'config', 'settings')
+settings = require _path.join(_root, 'config', 'settings')
 
 module.exports = (key, env) ->
   _extend(settings['defaults'], settings[env || process.env.NODE_ENV || "development"])[key]
