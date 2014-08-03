@@ -1,0 +1,43 @@
+{
+  "name": "NoodleJS",
+  "description": "MVC Framework for NodeJS",
+  "version": "0.0.1",
+  "homepage": "https://github.com/xpepermint/noodlejs",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xpepermint/noodlejs.git"
+  },
+  "engines": {
+    "node": ">=0.11.13"
+  },
+  "dependencies": {
+    "body-parser": "1.5.2",
+    "coffee-script": "1.7.1",
+    "express": "4.7.2",
+    "jasmine-node": "1.14.5",
+    "mongoose": "3.8.14",
+    "natural": "0.1.28",
+    "nodemon": "1.2.1",
+    "time": "0.11.0",
+    "underscore": "1.6.0",
+    "underscore.string": "2.3.3"
+  },
+  "scripts": {
+  },
+  "author": {
+    "name": "Kristijan Sedlak",
+    "email": "xpepermint@gmail.com"
+  },
+  "keywords": [],
+  "main": "./index.coffee",
+  "maintainers": [
+    {
+      "name": "Kristijan Sedlak",
+      "email": "xpepermint@gmail.com"
+    }
+  ],
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/xpepermint/noodlejs/issues"
+  }
+}
