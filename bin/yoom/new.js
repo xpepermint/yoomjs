@@ -1,9 +1,11 @@
-var fs = require('fs');
-var mkdir = require('mkdirp');
-var path = require('path');
+'use strict';
+
+let fs = require('fs');
+let mkdir = require('mkdirp');
+let path = require('path');
 
 // Path to the template directory.
-var templatesPath = __dirname+'/../../templates';
+const templatesPath = __dirname+'/../../templates';
 
 // Create application at the given directory `path`.
 module.exports = function(path) {

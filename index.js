@@ -1,3 +1,5 @@
+'use strict';
+
 //
 // APPLICATION
 //
@@ -7,7 +9,7 @@
 //
 
 // Express application instance.
-var app = require('express')();
+let app = require('express')();
 module.exports = app;
 // Application server instance.
 app.server = null;

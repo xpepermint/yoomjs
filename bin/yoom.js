@@ -1,14 +1,15 @@
 #!/usr/bin/env node --harmony
+'use strict';
 
-var path = require('path');
-var fs = require('fs');
-var program = require('commander');
+let path = require('path');
+let fs = require('fs');
+let program = require('commander');
 
 // Is in root folder?
-var inProjectRoot = fs.existsSync(process.cwd()+'/node_modules/yoom');
+const inProjectRoot = fs.existsSync(process.cwd()+'/node_modules/yoom');
 
 // Displyas the project's current version.
-var packageData = require(inProjectRoot ? process.cwd()+'/node_modules/yoom/package' : '../package')
+const packageData = require(inProjectRoot ? process.cwd()+'/node_modules/yoom/package' : '../package')
 program
   .version(packageData.version, '-v, --version');
 
