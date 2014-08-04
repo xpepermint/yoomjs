@@ -1,7 +1,7 @@
 {
   "name": "yoom",
   "description": "MVC Framework for NodeJS",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "homepage": "https://github.com/xpepermint/yoom",
   "repository": {
     "type": "git",
@@ -23,7 +23,7 @@
   },
   "scripts": {},
   "bin": {
-    "yoom": "./bin/yoom.coffee"
+    "yoom": "./bin/yoom.js"
   },
   "author": {
     "name": "Kristijan Sedlak",
@@ -38,7 +38,7 @@
     "rest",
     "express"
   ],
-  "main": "./index.coffee",
+  "main": "./index.js",
   "maintainers": [
     {
       "name": "Kristijan Sedlak",

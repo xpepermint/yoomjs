@@ -2,15 +2,12 @@
   "name": "",
   "version": "0.0.1",
   "scripts": {
-    "start": "nodemon --harmony ./config/boot.coffee",
-    "test": "jasmine-node --coffee --verbose --autotest ./spec"
+    "start": "nodemon ./config/boot.coffee",
+    "test": "jasmine-node --verbose --autotest ./spec"
   },
   "dependencies": {
-    "coffee-script": "1.7.1",
-    "morgan": "1.2.2",
     "nodemon": "1.2.1",
-    "underscore": "1.6.0",
-    "yoom": "0.0.3"
+    "yoom": "0.1.0"
   },
   "devDependencies": {
     "jasmine-node": "1.14.5"
