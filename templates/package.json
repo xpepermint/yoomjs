@@ -2,7 +2,7 @@
   "name": "",
   "version": "0.0.1",
   "scripts": {
-    "start": "nodemon ./config/boot.coffee",
+    "start": "nodemon --harmony ./config/boot.coffee",
     "test": "jasmine-node --coffee --verbose --autotest ./spec"
   },
   "dependencies": {

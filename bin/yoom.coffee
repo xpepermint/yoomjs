@@ -1,4 +1,4 @@
-#!/usr/bin/env ./node_modules/yoom/node_modules/.bin/coffee
+#!/usr/bin/env ./node_modules/yoom/node_modules/.bin/coffee --nodejs --harmony
 
 _path = require('path')
 _fs = require('fs')
