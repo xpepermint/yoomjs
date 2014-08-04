@@ -15,6 +15,7 @@ module.exports = (path) ->
     _path.join(path, 'bin')
     _path.join(path, 'config')
     _path.join(path, 'spec')
+    _path.join(path, 'logs')
   ].forEach (path) ->
     _mkdir.sync path
     console.log(path)

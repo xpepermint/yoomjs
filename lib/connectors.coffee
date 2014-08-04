@@ -1,5 +1,5 @@
 #
-# PROVIDERS (DATABASE CONNECTORS)
+# CONNECTORS (DATABASE CONNECTORS)
 #
 # This module integrates **connectors** into the application. A connector
 # provides a connection to a database. The connectors are used by models. You
@@ -14,28 +14,25 @@
 # All open database connections are stored in the `connections` variable. We can
 # access this variable as shown bellow.
 #
-#   db = require('../../framework/lib/connectors').connections[{connectorName}]
-#   db.model({modelName})
+#   require('yoom/lib/connectors').get({connectorName})
 #
 
-_path = require('path')
-
 # Defined connectors.
-connectors = require _path.join(process.cwd(), 'config', 'connectors')
+connectorsData = require("#{process.cwd()}/config/connectors")
 
 # Database connections.
 connections = {}
 
 # Connects all connectors required by the project's configuration data.
-connect = (cb) ->
+module.exports.connect = (cb) ->
   # list of defined connectors
-  connectorNames = Object.keys(connectors)
+  connectorNames = Object.keys(connectorsData)
   # recursive function that loads each connector
   loadNext = (nextIndex) ->
     connectorName = connectorNames[nextIndex]
-    connectorData = connectors[connectorName]
+    connectorData = connectorsData[connectorName]
     if connectorData
-      require(_path.join(__dirname, 'connectors', connectorData.connector)).load connectorData, (conn) ->
+      require("#{__dirname}/connectors/#{connectorData.connector}") connectorData, (conn) ->
         connections[connectorName] = conn
         loadNext(nextIndex+1)
     else
@@ -44,7 +41,7 @@ connect = (cb) ->
   loadNext(0)
 
 # Destroys all active connections.
-disconnect = (cb) ->
+module.exports.disconnect = (cb) ->
   # list of defined connectors
   connectorNames = Object.keys(connections)
   # recursive function that disconnects each connector
@@ -59,9 +56,6 @@ disconnect = (cb) ->
   # start loading connectors
   disconnectNext(0)
 
-
-# ------------------------------------------------------------------------------
-
-module.exports.connect = connect
-module.exports.disconnect = disconnect
-module.exports.connections = connections
+# Returns an opened connection.
+module.exports.get = (name) ->
+  connections[name]

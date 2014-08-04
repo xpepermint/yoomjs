@@ -1,24 +1,25 @@
 #
 # SETTINGS
 #
-# This file contains application configuration data. All configurable variables
-# lieves inside this file and should not be defined elswhere.
+# This file handles application configuration data. All configurable variables
+# should lieve inside `{project}/config/settings` file.
 #
-# Environemtn independable values are defined in the `settings.default` scope
-# while the `settings.{env}` scope holds values specific to the environment
-# {env}. Note that environment dependent keys override keys defined in the
-# default scope.
+# Environemtn independable values are defined in the `default` scope while the
+# `{env}` scope holds values specific to the environment. Environment dependent
+# keys override keys defined in the default scope.
 #
 # Example:
 #
-#   s = require('./config/settings')
-#   s('db.hostname')
+#   require('yoom').get('db.hostname')
 #
 
-_path = require('path')
-_extend = require('util')._extend
+util = require('util')
+app = require('../index')
 
-settings = require _path.join(process.cwd(), 'config', 'settings')
-
-module.exports = (key, env) ->
-  _extend(settings['defaults'], settings[env || process.env.NODE_ENV || "development"])[key]
+# loading project's settings
+settings = require("#{process.cwd()}/config/settings")
+# preparing environment data
+module.exports = data = util._extend(settings['defaults'], settings[app.get('env')])
+# adding variables into express application
+Object.keys(data).forEach (key) ->
+  app.set(key, data[key])

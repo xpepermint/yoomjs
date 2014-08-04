@@ -2,66 +2,36 @@
 # APPLICATION
 #
 # This module represents the main application module. Here we define and merge
-# all pieces (e.g. models, routes) together into a module that knows how to
-# `start` and `stop` the application.
-#
-# Example:
-#
-#   app = require('./config/application')
-#   app.start ->
-#     app.stop()
-#
-
-_path = require('path')
-_express = require('express')
-_cfg = require _path.join(__dirname, 'lib', 'settings')
-_connectors = require _path.join(__dirname, 'lib', 'connectors')
-_models = require _path.join(__dirname, 'lib', 'models')
-_controllers = require _path.join(__dirname, 'lib', 'controllers')
+# all the pieces (e.g. models, routes) together into a module that knows how to
+# `start` and `stop` itself.
 
 # Express application instance.
-app = _express()
-
+module.exports = app = require('express')()
 # Application server instance.
-http = null
-
-# Return a setting.
-app.setting = (key) ->
-  _cfg(key)
-
-# Return a model module.
-app.model = (name) ->
-  _models.models[name]
-
+app.server = null
 
 # Initializes the application and starts the server.
-start = (next) ->
+module.exports.start = (next) ->
+  # loading settings
+  require('./lib/settings')
   # connection mong database
-  _connectors.connect ->
+  require('./lib/connectors').connect ->
     # loading models
-    _models.load(app)
+    require('./lib/models')
     # loading controllers
-    _controllers.load(app)
+    require('./lib/controllers')
     # starting HTTP server
-    http = app.listen(_cfg('http.port'), _cfg('http.address'), next)
-    console.log("[application] Start in #{app.get('env')} mode on http://#{_cfg('http.address')}:#{_cfg('http.port')}")
+    app.server = app.listen app.get('http.port'), app.get('http.address'), next
+    console.log("[application] Start in #{app.get('env')} mode on http://#{app.get('http.address')}:#{app.get('http.port')}")
   # returning app
   app
 
 # Stops the server.
-stop = ->
+module.exports.stop = ->
   # stopping HTTP server
-  _connectors.disconnect ->
-    http.close()
+  require('./lib/connectors').disconnect ->
+    app.server.close()
     # initializing server instance variable
-    http = null
+    app.server = null
   # returning app
   app
-
-
-# ------------------------------------------------------------------------------
-
-module.exports = app
-module.exports.http = http
-module.exports.start = start
-module.exports.stop = stop

@@ -28,7 +28,7 @@ _program
   .action ->
     require('child_process').spawn("npm", ['start'], {stdio: "inherit", cwd: process.cwd() })
 
-# Starts the application server. This command must be run from project's root
+# Starts the application tests. This command must be run from project's root
 # folder. The command will load project's specific yoom version.
 _program
   .command('test')

@@ -1,5 +1,5 @@
 #
-# CONTROLLERS (& ROUTES)
+# CONTROLLERS & ROUTES
 #
 # This module integrates **routes** and **controllers** into the application.
 # All routes must be defined inside `config/routes.coffee` file as shown bellow.
@@ -14,32 +14,12 @@
 #   module.exports =
 #     index: (req, res) ->
 #       res.json(data)
-#     destroy: (req, res) ->
-#       res.send(data)
 #
 
-_path = require('path')
-_bpars = require('body-parser')
-_router = require('express').Router()
-_routes = require _path.join(process.cwd(), 'config', 'routes')
+app = require('../index')
 
 # Path to controllers directory.
-rootPath = _path.join(process.cwd(), 'app', 'controllers')
-
-# Loads middlewares for parsing request data These middlewares populates the
-# `req.body` variable which is available to every controller (route callback).
-loadBodyParsers = (app) ->
-  app.use(_bpars.json())
-  app.use(_bpars.urlencoded({ extended: true }))
-
-# Reads the `config/routes` file and configures the middleware router.
-loadRoutes = (app) ->
-  # looping through routes definitions
-  Object.keys(_routes).forEach (key) ->
-    # defining the route
-    loadRoute(key, _routes[key], rootPath)
-  # attaching router middleware to express application instance
-  app.use(_router)
+projectControllersPath = "#{process.cwd()}/app/controllers"
 
 # Creates a new router's route definition. The `key` attribute is the request
 # design, the `value` attribute is the target action that should be triggered
@@ -56,13 +36,13 @@ loadRoute = (key, value) ->
       res.redirect valueData.redirectTo
   # controllers/action
   else if valueData.controller
-    callback = require(_path.join(rootPath, valueData.controller))[valueData.action]
+    callback = require("#{projectControllersPath}/#{valueData.controller}")[valueData.action]
   # text
   else
     callback = (req, res) ->
       res.send valueData.data
   # loading route
-  _router[keyData.method](keyData.path, callback)
+  router[keyData.method](keyData.path, callback)
 
 # Parses the `key` attribute which defines the request design. See the list of
 # known request designs bellow.
@@ -98,12 +78,15 @@ parseRouteValue = (value) ->
   # text
   { data: value }
 
-# Integrates routes and controllers.
-load = (app) ->
-  loadBodyParsers(app)
-  loadRoutes(app)
+# Loading middlewares for parsing request data These middlewares populates the
+# `req.body` variable which is available to every controller (route callback).
+bp = require('body-parser')
+app.use(bp.json())
+app.use(bp.urlencoded({ extended: true }))
 
-
-# ------------------------------------------------------------------------------
-
-module.exports.load = load
+# Loading routes middlewares from `config/routes`.
+routesData = require("#{process.cwd()}/config/routes")
+router = require('express').Router()
+app.use(router)
+Object.keys(routesData).forEach (key) ->
+  loadRoute(key, routesData[key], projectControllersPath)

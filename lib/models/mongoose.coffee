@@ -21,26 +21,28 @@ _time = require('time')
 _mongo = require('mongoose')
 _conn = require('../connectors')
 
+
+
+
+
+
+
+# Logger setup.
+_log = require('winston')
+_mongo.set 'debug', (coll, method, query, doc, options) ->
+  _log.error('%s.%s(%s) doc=%s options=%s', coll, method, JSON.stringify(Object(query)), JSON.stringify(Object(doc)), JSON.stringify(Object(options)))
+
+
+
+
+
+
+
 # Path to controllers directory.
-rootPath = _path.join(process.cwd(), 'app', 'models')
+projectModelsPath = _path.join(process.cwd(), 'app', 'models')
 
 # All registered models.
 models = {}
-
-# Loops through all the files defined in `app/models` directory and load only
-# modules where `discriminators==null`.
-loadModels = ->
-  # looping through models definitions
-  _fs.readdirSync(rootPath).forEach (filename) ->
-    filePath = _path.join(rootPath, filename)
-    # ignoring directories
-    if _fs.statSync(filePath).isFile()
-      # loading model data
-      modelData = require(filePath)
-      # loading model if not discriminator
-      if !modelData.connector || modelData.connector == 'mongoose'
-        unless modelData.discriminator?
-          loadModel(filePath)
 
 # Loads model at path (based on http://mongoosejs.com/docs/guide.html).
 loadModel = (filePath) ->
@@ -51,36 +53,20 @@ loadModel = (filePath) ->
   modelName = modelData.modelName || filePathToModelName(filePath)
   tableName = modelData.tableName || modelNameToTableName(modelName)
   # registering mongoose model
-  dbConnection = _conn.connections[modelData.connectorName]
+  dbConnection = _conn.get(modelData.connectorName)
   models[modelName] = dbConnection.model(modelName, schemaInstance, tableName)
-
-# Loops through all the files defined in `app/models` directory and load only
-# modules where `discriminators!=null`. Note that discriminatored modules
-# inherits from the parent model defined by `discriminators` variable.
-loadDiscriminators = ->
-  # looping through models definitions
-  _fs.readdirSync(rootPath).forEach (filename) ->
-    filePath = _path.join(rootPath, filename)
-    # ignoring directories
-    if _fs.statSync(filePath).isFile()
-      # loading model schema
-      modelData = require(filePath)
-      # loading model if not discriminator
-      if !modelData.connector || modelData.connector == 'mongoose'
-        if modelData.discriminator?
-          loadDiscriminator(filePath)
 
 # Loads model at path (based on http://mongoosejs.com/docs/api.html#model_Model-discriminators).
 loadDiscriminator = (filePath) ->
   discriminatorData = require filePath
-  modelData = require _path.join(rootPath, modelNameToFileName(discriminatorData.discriminator))
+  modelData = require _path.join(projectModelsPath, modelNameToFileName(discriminatorData.discriminator))
   schemaData = _.extend(_.clone(modelData), discriminatorData)
   # preparing model schema class
   schemaInstance = createModelSchema(schemaData)
   # preparing model name
   discriminatorModelName = discriminatorData.modelName || filePathToModelName(filePath)
   # registering mongoose model
-  dbConnection = _conn.connections[modelData.connectorName]
+  dbConnection = _conn.get(modelData.connectorName)
   models[discriminatorModelName] = dbConnection.model(discriminatorData.discriminator).discriminator(discriminatorModelName, schemaInstance)
 
 # Creates model schema instance based on model data. Here we implement model
@@ -172,15 +158,32 @@ currentDate = (region) ->
   d.setTimezone(region)
   d
 
-# Loads models and discriminators.
-load = ->
-  # initializing variable where registered models will be stored
-  models = {}
-  # loading models
-  loadModels()
-  loadDiscriminators()
-  models
+# Loops through all the files defined in `app/models` directory and load only
+# modules where `discriminators==null`.
+_fs.readdirSync(projectModelsPath).forEach (filename) ->
+  filePath = _path.join(projectModelsPath, filename)
+  # ignoring directories
+  if _fs.statSync(filePath).isFile()
+    # loading model data
+    modelData = require(filePath)
+    # loading model if not discriminator
+    if !modelData.connector || modelData.connector == 'mongoose'
+      unless modelData.discriminator?
+        loadModel(filePath)
 
-# ------------------------------------------------------------------------------
+# Loops through all the files defined in `app/models` directory and load only
+# modules where `discriminators!=null`. Note that discriminatored modules
+# inherits from the parent model defined by `discriminators` variable.
+_fs.readdirSync(projectModelsPath).forEach (filename) ->
+  filePath = _path.join(projectModelsPath, filename)
+  # ignoring directories
+  if _fs.statSync(filePath).isFile()
+    # loading model schema
+    modelData = require(filePath)
+    # loading model if not discriminator
+    if !modelData.connector || modelData.connector == 'mongoose'
+      if modelData.discriminator?
+        loadDiscriminator(filePath)
 
-module.exports.load = load
+# All loaded models are exposed.
+module.exports = models

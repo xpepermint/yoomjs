@@ -2,9 +2,8 @@
 # MODELS
 #
 # This module integrates **models** into the application. All models must be
-# defined inside `app/models` file. Modules are provider-specific thus check
-# the files under `framework/lib/models` for details. The general structure of
-# the model is shown bellow.
+# defined inside `app/models` directory. Modules are connector-specific. The
+# general structure of the model is shown bellow.
 #
 #   module.exports =
 #     modelName:            # optional, default: {filename}.classified.singularized
@@ -27,29 +26,24 @@
 #       foo: ->
 #
 # All registered models are stored in `models` variable. We can access the
-# variable as shown bellow.
+# model module as shown bellow.
 #
-#   require('../../framework/lib/models').models[{modelName}]
+#   require('yoom/lib/models').get({modelName})
 #
 
-_ = require('underscore')
-_path = require('path')
-_fs = require('fs')
+util = require('util')
+fs = require('fs')
 
 # Variable where list of loaded models will be stored
 models = {}
 
-# Loads models and discriminators.
-load = ->
-  # looping through modulules
-  _fs.readdirSync(_path.join(__dirname, 'models')).forEach (filename) ->
-    # loading models for each connector type
-    loadedModels = require(_path.join(__dirname, 'models', filename)).load()
-    # storing loaded models to `models` variable
-    _.extend models, loadedModels
+# looping through modulules
+fs.readdirSync("#{__dirname}/models").forEach (filename) ->
+  # loading models for each connector type
+  loadedModels = require("#{__dirname}/models/#{filename}")
+  # storing loaded models to `models` variable
+  util._extend models, loadedModels
 
-
-# ------------------------------------------------------------------------------
-
-module.exports.load = load
-module.exports.models = models
+# Returns a model.
+module.exports.get = (name) ->
+  models[name]
