@@ -1,5 +1,8 @@
 # YoomJS - MVC Framework for NodeJS
 
+![Build Status](https://travis-ci.org/xpepermint/yoom.svg?branch=master)
+
+
 # Installation
 
 Install the NPM package.
