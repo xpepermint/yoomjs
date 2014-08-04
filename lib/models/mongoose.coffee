@@ -20,10 +20,9 @@ _natur = new (require('natural').NounInflector)()
 _time = require('time')
 _mongo = require('mongoose')
 _conn = require('../connectors')
-_root = _path.join(_path.dirname(require.main.filename), '..') # project's root
 
 # Path to controllers directory.
-rootPath = _path.join(_root, 'app', 'models')
+rootPath = _path.join(process.cwd(), 'app', 'models')
 
 # All registered models.
 models = {}

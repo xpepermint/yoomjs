@@ -21,11 +21,10 @@
 _path = require('path')
 _bpars = require('body-parser')
 _router = require('express').Router()
-_root = _path.join(_path.dirname(require.main.filename), '..') # project's root
-_routes = require _path.join(_root, 'config', 'routes')
+_routes = require _path.join(process.cwd(), 'config', 'routes')
 
 # Path to controllers directory.
-rootPath = _path.join(_root, 'app', 'controllers')
+rootPath = _path.join(process.cwd(), 'app', 'controllers')
 
 # Loads middlewares for parsing request data These middlewares populates the
 # `req.body` variable which is available to every controller (route callback).
@@ -55,8 +54,14 @@ loadRoute = (key, value) ->
   if valueData.redirectTo
     callback = (req, res) ->
       res.redirect valueData.redirectTo
-  else
+  # controllers/action
+  else if valueData.controller
     callback = require(_path.join(rootPath, valueData.controller))[valueData.action]
+  # text
+  else
+    callback = (req, res) ->
+      res.send valueData.data
+  # loading route
   _router[keyData.method](keyData.path, callback)
 
 # Parses the `key` attribute which defines the request design. See the list of
@@ -79,17 +84,19 @@ parseRouteKey = (key) ->
 #
 #   '{http|https|ftp}://{path}'
 #   '/{path}'
-#   '{controller}'
 #   '{controller}#{action}'
+#   '... some text ...'
 #
 parseRouteValue = (value) ->
   # redirections
   if ['http:', 'https:', 'ftp:'].indexOf(value.split('/')[0]) == 0 || value[0] == '/'
     return { redirectTo: value }
-  # controllers and actions
-  parts = value.split('#')
-  { controller: parts[0], action: parts[1]||'index' }
-
+  # controllers/actions
+  else if value.indexOf('#') != -1
+    parts = value.split('#')
+    return { controller: parts[0], action: parts[1]||'index' }
+  # text
+  { data: value }
 
 # Integrates routes and controllers.
 load = (app) ->

@@ -3,15 +3,14 @@
 #
 # This module represents the main application module. Here we define and merge
 # all pieces (e.g. models, routes) together into a module that knows how to
-# `lift` and `lower` the application.
+# `start` and `stop` the application.
 #
 # Example:
 #
 #   app = require('./config/application')
-#   app.lift ->
-#     app.lower()
+#   app.start ->
+#     app.stop()
 #
-
 
 _path = require('path')
 _express = require('express')
@@ -36,26 +35,26 @@ app.model = (name) ->
 
 
 # Initializes the application and starts the server.
-lift = (next) ->
+start = (next) ->
   # connection mong database
-  _connectors.load ->
+  _connectors.connect ->
     # loading models
     _models.load(app)
     # loading controllers
     _controllers.load(app)
     # starting HTTP server
     http = app.listen(_cfg('http.port'), _cfg('http.address'), next)
-    console.log("[Application] Start in #{app.get('env')} mode on http://#{_cfg('http.address')}:#{_cfg('http.port')}")
+    console.log("[application] Start in #{app.get('env')} mode on http://#{_cfg('http.address')}:#{_cfg('http.port')}")
   # returning app
   app
 
 # Stops the server.
-lower = ->
-  console.log("Stopping ...")
+stop = ->
   # stopping HTTP server
-  http.close()
-  # initializing server instance variable
-  http = null
+  _connectors.disconnect ->
+    http.close()
+    # initializing server instance variable
+    http = null
   # returning app
   app
 
@@ -64,5 +63,5 @@ lower = ->
 
 module.exports = app
 module.exports.http = http
-module.exports.lift = lift
-module.exports.lower = lower
+module.exports.start = start
+module.exports.stop = stop

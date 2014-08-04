@@ -19,16 +19,15 @@
 #
 
 _path = require('path')
-_root = _path.join(_path.dirname(require.main.filename), '..') # project's root
 
 # Defined connectors.
-connectors = require _path.join(_root, 'config', 'connectors')
+connectors = require _path.join(process.cwd(), 'config', 'connectors')
 
 # Database connections.
 connections = {}
 
-# Loads all required connectors based on project's configuration data.
-load = (cb) ->
+# Connects all connectors required by the project's configuration data.
+connect = (cb) ->
   # list of defined connectors
   connectorNames = Object.keys(connectors)
   # recursive function that loads each connector
@@ -44,8 +43,25 @@ load = (cb) ->
   # start loading connectors
   loadNext(0)
 
+# Destroys all active connections.
+disconnect = (cb) ->
+  # list of defined connectors
+  connectorNames = Object.keys(connections)
+  # recursive function that disconnects each connector
+  disconnectNext = (nextIndex) ->
+    connectorName = connectorNames[nextIndex]
+    if connectorName
+      connections[connectorName].close()
+      delete connections[connectorName]
+      disconnectNext(nextIndex+1)
+    else
+      cb()
+  # start loading connectors
+  disconnectNext(0)
+
 
 # ------------------------------------------------------------------------------
 
-module.exports.load = load
+module.exports.connect = connect
+module.exports.disconnect = disconnect
 module.exports.connections = connections
