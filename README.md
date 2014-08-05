@@ -30,26 +30,18 @@ yoom start
 Open your favourite browser and navigate to `http://localhost:3000`. The project is ready and you can start building your next generation web application or API.
 
 
-## TO-DO
-
-Settings at middleware level
-app.use(function *(){
-  this; // is the Context
-  this.request; // is a koa Request
-  this.response; // is a koa Response
-  this.settings; // is a yoom Settings
-});
-
-
-Run Multiple HTTP instances: http://koajs.com/#app-listen-
-Node cluster
-Cookies & session: http://koajs.com/#app-keys-
-Logging: http://koajs.com/#error-handling
-HowTo KoaJS: https://github.com/koajs/examples, https://github.com/koajs/workshop
-Nginx as proxy
-
-
 <!--
+
+## TO-DO / NOTES
+
+* Run Multiple HTTP instances: http://koajs.com/#app-listen-
+* Node cluster
+* Cookies & session: http://koajs.com/#app-keys-
+* Logging: http://koajs.com/#error-handling
+* HowTo KoaJS: https://github.com/koajs/examples, https://github.com/koajs/workshop
+* Nginx as proxy
+
+
 ## Features
 * on top of express
 * middlewares
