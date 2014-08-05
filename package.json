@@ -8,7 +8,7 @@
     "url": "git://github.com/xpepermint/yoom.git"
   },
   "engines": {
-    "node": ">=0.11.0"
+    "node": ">=0.11.13"
   },
   "dependencies": {
     "body-parser": "1.5.2",
