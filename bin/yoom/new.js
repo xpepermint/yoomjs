@@ -16,7 +16,8 @@ module.exports = function(projectPath) {
     projectPath+'/bin',
     projectPath+'/config',
     projectPath+'/spec',
-    projectPath+'/logs'
+    projectPath+'/logs',
+    projectPath+'/public',
   ].forEach(function(path) {
     mkdir.sync(path);
     console.log(path);
@@ -27,6 +28,7 @@ module.exports = function(projectPath) {
     [templatesPath+'/config/connectors.js', projectPath+'/config/connectors.js'],
     [templatesPath+'/config/routes.js', projectPath+'/config/routes.js'],
     [templatesPath+'/config/settings.js', projectPath+'/config/settings.js'],
+    [templatesPath+'/public/home.html', projectPath+'/public/home.html'],
     [templatesPath+'/editorconfig', projectPath+'/.editorconfig'],
     [templatesPath+'/gitignore', projectPath+'/.gitignore'],
     [templatesPath+'/package.json', projectPath+'/package.json']

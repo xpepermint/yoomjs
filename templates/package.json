@@ -6,6 +6,8 @@
     "test": "jasmine-node --verbose --autotest ./spec"
   },
   "dependencies": {
+    "koa-response-time": "1.0.2",
+    "koa-static": "1.4.6",
     "nodemon": "1.2.1",
     "yoom": "0.2.4"
   },

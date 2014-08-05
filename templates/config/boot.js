@@ -2,16 +2,25 @@
 
 // application instance
 let app = require('yoom');
-// loading settings
-require('yoom/lib/settings');
-// loading request extensions
+
+// Response time header middleware (https://github.com/koajs/response-time).
+//app.use(require('koa-response-time')());
+
+// Request extensions.
 require('yoom/lib/requests');
-// connection mong database
+
+// Settings implementation.
+require('yoom/lib/settings');
+
+// Database connectors.
 require('yoom/lib/connectors').connect(function() {
-  // loading models
+
+  // Models implementation.
   require('yoom/lib/models');
-  // loading controllers
+
+  // Controllers implementation.
   require('yoom/lib/controllers');
-  // lifting application
+
+  // Application start.
   app.start();
 });
