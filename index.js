@@ -9,8 +9,7 @@
 //
 
 // Express application instance.
-let app = require('express')();
-module.exports = app;
+let app = module.exports = require('koa')();
 // Application server instance.
 app.server = null;
 
@@ -22,11 +21,13 @@ module.exports.start = function(next) {
   require('./lib/connectors').connect(function() {
     // loading models
     require('./lib/models');
+    // loading request extensions
+    require('./lib/requests');
     // loading controllers
     require('./lib/controllers');
     // starting HTTP server
-    app.server = app.listen(app.get('http.port'), app.get('http.address'), next);
-    console.log("[application] Start in "+app.get('env')+" mode on http://"+app.get('http.address')+":"+app.get('http.port'));
+    app.server = app.listen(app.settings.httpPort, app.settings.httpAddress, next);
+    console.log("[application] Start in "+app.env+" mode on http://"+app.settings.httpAddress+":"+app.settings.httpPort);
   });
   // returning app
   return app;

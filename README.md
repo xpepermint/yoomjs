@@ -3,7 +3,7 @@
 ![Build Status](https://travis-ci.org/xpepermint/yoom.svg?branch=master)
 
 
-# Installation
+## Installation
 
 Install the NPM package.
 
@@ -25,6 +25,22 @@ yoom start
 ```
 
 
+## TO-DO
+
+Settings at middleware level
+app.use(function *(){
+  this; // is the Context
+  this.request; // is a koa Request
+  this.response; // is a koa Response
+  this.settings; // is a yoom Settings
+});
+
+
+Multiple HTTP instances: http://koajs.com/#app-listen-
+Cookies & session: http://koajs.com/#app-keys-
+Logging: http://koajs.com/#error-handling
+Content Negotiation: http://koajs.com/#content-negotiation
+HowTo KoaJS: https://github.com/koajs/examples, https://github.com/koajs/workshop
 
 <!--
 ## Features
