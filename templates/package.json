@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "nodemon": "1.2.1",
-    "yoom": "0.1.0"
+    "yoom": "0.2.4"
   },
   "devDependencies": {
     "jasmine-node": "1.14.5"

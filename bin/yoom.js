@@ -18,7 +18,7 @@ program
   .command('new <name>')
   .description('create new project')
   .action(function(name) {
-    require('./yoom/new')(path.resolve(__dirname, name));
+    require('./yoom/new')(path.resolve(process.cwd(), name));
   });
 
 // Starts the application server. This command must be run from project's root

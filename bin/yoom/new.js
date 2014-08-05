@@ -2,42 +2,41 @@
 
 let fs = require('fs');
 let mkdir = require('mkdirp');
-let path = require('path');
 
 // Path to the template directory.
 const templatesPath = __dirname+'/../../templates';
 
 // Create application at the given directory `path`.
-module.exports = function(path) {
+module.exports = function(projectPath) {
 
   // creating directory structure
-  [ path,
-    path+'/app/controllers',
-    path+'/app/models',
-    path+'/bin',
-    path+'/config',
-    path+'/spec',
-    path+'/logs'
+  [ projectPath,
+    projectPath+'/app/controllers',
+    projectPath+'/app/models',
+    projectPath+'/bin',
+    projectPath+'/config',
+    projectPath+'/spec',
+    projectPath+'/logs'
   ].forEach(function(path) {
     mkdir.sync(path);
     console.log(path);
   });
 
   // copying static files
-  [ [templatesPath+'/config/boot.js', path+'/config/boot.js'],
-    [templatesPath+'/config/connectors.js', path+'/config/connectors.js'],
-    [templatesPath+'/config/routes.js', path+'/config/routes.js'],
-    [templatesPath+'/config/settings.js', path+'/config/settings.js'],
-    [templatesPath+'/editorconfig', path+'/.editorconfig'],
-    [templatesPath+'/gitignore', path+'/.gitignore'],
-    [templatesPath+'/package.json', path+'/package.json']
+  [ [templatesPath+'/config/boot.js', projectPath+'/config/boot.js'],
+    [templatesPath+'/config/connectors.js', projectPath+'/config/connectors.js'],
+    [templatesPath+'/config/routes.js', projectPath+'/config/routes.js'],
+    [templatesPath+'/config/settings.js', projectPath+'/config/settings.js'],
+    [templatesPath+'/editorconfig', projectPath+'/.editorconfig'],
+    [templatesPath+'/gitignore', projectPath+'/.gitignore'],
+    [templatesPath+'/package.json', projectPath+'/package.json']
   ].forEach(function(fromTo) {
-    fileSrc = fs.readFileSync(fromTo[0], 'utf-8');
+    let fileSrc = fs.readFileSync(fromTo[0], 'utf-8');
     fs.writeFileSync(fromTo[1], fileSrc);
     console.log(fromTo[1]);
   });
 
   // installing modules
-  require('child_process').spawn("npm", ['install'], {stdio: "inherit", cwd: path });
+  require('child_process').spawn("npm", ['install'], {stdio: "inherit", cwd: projectPath });
 
 };
