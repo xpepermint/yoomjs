@@ -3,8 +3,11 @@
 // application instance
 let app = require('yoom');
 
-// Response time header middleware (https://github.com/koajs/response-time).
-//app.use(require('koa-response-time')());
+// Response time header middleware.
+app.use(require('koa-response-time')());
+
+// Static content.
+app.use(require('koa-static')('public'));
 
 // Request extensions.
 require('yoom/lib/requests');
