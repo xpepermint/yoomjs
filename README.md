@@ -1,6 +1,4 @@
-<div style="text-align: center">
-  <img src="https://raw.githubusercontent.com/xpepermint/yoomjs/master/logo.png" />
-</div>
+![YoomJS](https://raw.githubusercontent.com/xpepermint/yoomjs/master/logo.png)
 
 # YoomJS - MVC Framework for NodeJS
 
