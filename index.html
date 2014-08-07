@@ -7,9 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -19,52 +17,81 @@
       <header>
         <h1>Yoom</h1>
         <p>YoomJS - MVC Framework for NodeJS</p>
-        <p class="view"><a href="https://github.com/xpepermint/yoom">View the Project on GitHub <small>xpepermint/yoom</small></a></p>
+
+        <p class="view"><a href="https://github.com/xpepermint/yoomjs">View the Project on GitHub <small>xpepermint/yoomjs</small></a></p>
+
+
         <ul>
-          <li><a href="https://github.com/xpepermint/yoom/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/xpepermint/yoom/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/xpepermint/yoom">View On <strong>GitHub</strong></a></li>
+          <li><a href="https://github.com/xpepermint/yoomjs/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/xpepermint/yoomjs/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/xpepermint/yoomjs">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
       <section>
-        <h1>
+        <p><img src="https://raw.githubusercontent.com/xpepermint/yoomjs/master/logo.png" alt="YoomJS"></p>
+
+<h1>
 <a name="yoomjs---mvc-framework-for-nodejs" class="anchor" href="#yoomjs---mvc-framework-for-nodejs"><span class="octicon octicon-link"></span></a>YoomJS - MVC Framework for NodeJS</h1>
 
-<p><img src="https://travis-ci.org/xpepermint/yoom.svg?branch=master" alt="Build Status"><a href="http://badge.fury.io/js/yoom"><img src="https://badge.fury.io/js/yoom.svg" alt="NPM version"></a>
-<a href="https://gemnasium.com/xpepermint/yoom"><img src="https://gemnasium.com/xpepermint/yoom.svg" alt="Dependency Status"></a>
-<a href="https://flattr.com/submit/auto?user_id=Xpepermint&amp;url=https://github.com/xpepermint/yoom&amp;title=YoomJS&amp;tags=github&amp;category=software"><img src="https://flattr.com/_img/icons/flattr_logo_16.png" alt="Flattr this git repo"></a></p>
+<p><img src="https://travis-ci.org/xpepermint/yoomjs.svg?branch=master" alt="Build Status"><a href="http://badge.fury.io/js/yoom"><img src="https://badge.fury.io/js/yoom.svg" alt="NPM version"></a>
+<a href="https://gemnasium.com/xpepermint/yoomjs"><img src="https://gemnasium.com/xpepermint/yoomjs.svg" alt="Dependency Status"></a></p>
 
 <p>YoomJS is a next generation web framework for <a href="http://nodejs.org/">NodeJS</a> built on top of <a href="http://koajs.com/">KoaJS</a>. YoomJS mimics the MVC pattern of frameworks like <a href="http://rubyonrails.org/">Ruby on Rails</a> which makes writing custom, enterprise-grade <a href="http://nodejs.org/">NodeJS</a> applications fast and enjoyable.</p>
 
 <h2>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p><strong>Before you start:</strong> Make sure that <a href="http://nodejs.org/">NodeJS</a> version <code>0.11.13</code> or later is installed. If not we recommend installing a fresh version of <a href="http://nodejs.org/">NodeJS</a> using the <a href="https://github.com/creationix/nvm">Node Version Manager</a>.</p>
+<h3>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h3>
 
-<p>Install the <a href="https://www.npmjs.org/package/yoom">NPM</a> package.</p>
+<p>Make sure that <a href="http://nodejs.org/">NodeJS</a> version <code>0.11.13</code> or later is installed. You can easily installing a fresh version of <a href="http://nodejs.org/">NodeJS</a> using the <a href="https://github.com/creationix/nvm">Node Version Manager</a>.</p>
+
+<p>You also need <a href="http://www.bowserjs.org/">Bower</a> and <a href="http://gulpjs.com/">Gulp</a> commands available from the command-line.</p>
+
+<h3>
+<a name="yoom" class="anchor" href="#yoom"><span class="octicon octicon-link"></span></a>Yoom</h3>
+
+<p>Install the package.</p>
 
 <pre><code>npm install -g yoom
 </code></pre>
 
-<p>Create a new project.</p>
+<p>After the installation the <code>yoom</code> command-line script will be available. Run <code>yoom --help</code> to see the list of available commands.</p>
 
-<pre><code>yoom new {myproject}
-</code></pre>
+<h3>
+<a name="create-new-project" class="anchor" href="#create-new-project"><span class="octicon octicon-link"></span></a>Create New Project</h3>
 
-<p>Start the application server.</p>
+<p>Use the <code>yoom</code> command to create a new application directory structure.</p>
 
-<pre><code>cd {myproject}
-yoom start
-</code></pre>
+<div class="highlight highlight-javascript"><pre><span class="nx">yoom</span> <span class="k">new</span> <span class="p">{</span><span class="nx">project</span><span class="o">-</span><span class="nx">path</span><span class="p">}</span>
+</pre></div>
 
-<p>Open your favourite browser and navigate to <code>http://localhost:3000</code>. The project is ready and you can start building your next generation web application or API.</p>
+<p>From <code>{project-path}</code> start the application server.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">yoom</span> <span class="nx">start</span>
+</pre></div>
+
+<p>You can also run open the application in your default browser.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">yoom</span> <span class="nx">open</span>
+</pre></div>
+
+<p>The project is ready and you can start building your next generation web application, API, or website.</p>
+
+<h2>
+<a name="donate" class="anchor" href="#donate"><span class="octicon octicon-link"></span></a>Donate</h2>
+
+<p>Please support us if you like this project.</p>
+
+<p><a href="https://www.gittip.com/xpepermint/"><img src="https://rawgithub.com/twolfson/gittip-badge/0.2.0/dist/gittip.png" alt="Support via Gittip"></a>
+<a href="https://flattr.com/submit/auto?user_id=Xpepermint&amp;url=https://github.com/xpepermint/yoomjs&amp;title=YoomJS&amp;tags=github&amp;category=software"><img src="https://flattr.com/_img/icons/flattr_logo_16.png" alt="Flattr this git repo"></a></p>
       </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/xpepermint">xpepermint</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/xpepermint">xpepermint</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    <script src="javascripts/scale.fix.js"></script>
               <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
