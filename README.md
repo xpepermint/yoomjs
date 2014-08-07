@@ -1,8 +1,11 @@
+<div style="text-align: center; padding-bottom: 20px">
 ![](./logo.png)
 
 ![Build Status](https://travis-ci.org/xpepermint/yoomjs.svg?branch=master)
 [![NPM version](https://badge.fury.io/js/yoom.svg)](http://badge.fury.io/js/yoom)
 [![Dependency Status](https://gemnasium.com/xpepermint/yoomjs.svg)](https://gemnasium.com/xpepermint/yoomjs)
+</div>
+
 
 # YoomJS - MVC Framework for NodeJS
 
