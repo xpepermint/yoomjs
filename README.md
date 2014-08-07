@@ -40,10 +40,14 @@ Open your favourite browser and navigate to `http://localhost:3000`. The project
 * Run Multiple HTTP instances: http://koajs.com/#app-listen-
 * Node cluster
 * Cookies & session: http://koajs.com/#app-keys-
-* Logging: http://koajs.com/#error-handling
+* Logging: http://koajs.com/#error-handling (winston)
 * HowTo KoaJS: https://github.com/koajs/examples, https://github.com/koajs/workshop
 * Nginx as proxy
-
+* doc: https://readthedocs.org/
+* deployment: https://www.npmjs.org/package/forever
+* deploy to heroku
+* video doc like https://github.com/floatdrop/gulp-watch
+* every task returns stream
 
 ## Features
 * on top of express
@@ -57,4 +61,13 @@ Open your favourite browser and navigate to `http://localhost:3000`. The project
 * mongodb with mongoose
 * per-model database connection support
 * command-line generators
+* customize boot
+* extend gulp task
+* gulp: gulp {task}
+* npm: npm install {package} --save
+* bower: bower install {package} --save
+* livereload: https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei
+* streams, gulp
+* default assets coffee, less, lesshat
+* extendable assets pipeline
 -->

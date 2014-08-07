@@ -1,19 +1,16 @@
 'use strict';
 
 // application instance
-let app = require('yoom');
+module.exports = require('yoom');
 
-// Response time header middleware.
-app.use(require('koa-response-time')());
+// Global settings.
+require('yoom/lib/settings');
 
-// Static content.
-app.use(require('koa-static')('public'));
+// Assets pipeline.
+require('yoom/lib/assets');
 
 // Request extensions.
 require('yoom/lib/requests');
-
-// Settings implementation.
-require('yoom/lib/settings');
 
 // Database connectors.
 require('yoom/lib/connectors').connect(function() {
@@ -25,5 +22,5 @@ require('yoom/lib/connectors').connect(function() {
   require('yoom/lib/controllers');
 
   // Application start.
-  app.start();
+  module.exports.start();
 });

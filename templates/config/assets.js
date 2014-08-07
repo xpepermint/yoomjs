@@ -2,6 +2,8 @@
 
 module.exports = {
 
-  '/': '/index.html'
+  scripts: {},
+
+  styles: {}
 
 };

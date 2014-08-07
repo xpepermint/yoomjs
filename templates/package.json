@@ -1,15 +1,13 @@
 {
-  "name": "",
+  "name": "noname",
   "version": "0.0.1",
   "scripts": {
-    "start": "nodemon --harmony ./config/boot.js",
+    "start": "gulp start",
     "test": "jasmine-node --verbose --autotest ./spec"
   },
   "dependencies": {
-    "koa-response-time": "1.0.2",
-    "koa-static": "1.4.6",
-    "nodemon": "1.2.1",
-    "yoom": "0.2.5"
+    "gulp": "3.8.7",
+    "yoom": "0.2.6"
   },
   "devDependencies": {
     "jasmine-node": "1.14.5"
