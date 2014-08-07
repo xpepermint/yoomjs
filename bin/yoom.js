@@ -27,7 +27,16 @@ program
   .command('start')
   .description('start the application server')
   .action(function() {
-    require('child_process').spawn("npm", ['start'], {stdio: "inherit", cwd: process.cwd() });
+    require('child_process').spawn("gulp", ['start'], {stdio: "inherit", cwd: process.cwd() });
+  });
+
+// Starts the application tests. This command must be run from project's root
+// folder. The command will load project's specific yoom version.
+program
+  .command('open')
+  .description('open application in browser')
+  .action(function() {
+    require('child_process').spawn("gulp", ['open'], {stdio: "inherit", cwd: process.cwd() });
   });
 
 // Starts the application tests. This command must be run from project's root
@@ -36,7 +45,7 @@ program
   .command('test')
   .description('run application specs')
   .action(function() {
-    require('child_process').spawn("npm", ['test'], {stdio: "inherit", cwd: process.cwd() });
+    require('child_process').spawn("gulp", ['test'], {stdio: "inherit", cwd: process.cwd() });
   });
 
 // Unknown command handling.

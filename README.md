@@ -1,36 +1,59 @@
-# YoomJS - MVC Framework for NodeJS
+![](./logo.png)
 
-![Build Status](https://travis-ci.org/xpepermint/yoom.svg?branch=master)
+![Build Status](https://travis-ci.org/xpepermint/yoomjs.svg?branch=master)
 [![NPM version](https://badge.fury.io/js/yoom.svg)](http://badge.fury.io/js/yoom)
-[![Dependency Status](https://gemnasium.com/xpepermint/yoom.svg)](https://gemnasium.com/xpepermint/yoom)
-[![Flattr this git repo](https://flattr.com/_img/icons/flattr_logo_16.png)](https://flattr.com/submit/auto?user_id=Xpepermint&url=https://github.com/xpepermint/yoom&title=YoomJS&tags=github&category=software)
+[![Dependency Status](https://gemnasium.com/xpepermint/yoomjs.svg)](https://gemnasium.com/xpepermint/yoomjs)
+
+# YoomJS - MVC Framework for NodeJS
 
 YoomJS is a next generation web framework for [NodeJS](http://nodejs.org/) built on top of [KoaJS](http://koajs.com/). YoomJS mimics the MVC pattern of frameworks like [Ruby on Rails](http://rubyonrails.org/) which makes writing custom, enterprise-grade [NodeJS](http://nodejs.org/) applications fast and enjoyable.
 
 ## Installation
 
-**Before you start:** Make sure that [NodeJS](http://nodejs.org/) version `0.11.13` or later is installed. If not we recommend installing a fresh version of [NodeJS](http://nodejs.org/) using the [Node Version Manager](https://github.com/creationix/nvm).
+### Dependencies
 
-Install the [NPM](https://www.npmjs.org/package/yoom) package.
+Make sure that [NodeJS](http://nodejs.org/) version `0.11.13` or later is installed. You can easily installing a fresh version of [NodeJS](http://nodejs.org/) using the [Node Version Manager](https://github.com/creationix/nvm).
+
+You also need [Bower](http://www.bowserjs.org/) and [Gulp](http://gulpjs.com/) commands available from the command-line.
+
+### Yoom
+
+Install the package.
 
 ```
 npm install -g yoom
 ```
 
-Create a new project.
+After the installation the `yoom` command-line script will be available. Run `yoom --help` to see the list of available commands.
 
-```
-yoom new {myproject}
+### Create New Project
+
+Use the `yoom` command to create a new application directory structure.
+
+``` javascript
+yoom new {project-path}
 ```
 
-Start the application server.
+From `{project-path}` start the application server.
 
-```
-cd {myproject}
+``` javascript
 yoom start
 ```
 
-Open your favourite browser and navigate to `http://localhost:3000`. The project is ready and you can start building your next generation web application or API.
+You can also run open the application in your default browser.
+
+``` javascript
+yoom open
+```
+
+The project is ready and you can start building your next generation web application, API, or website.
+
+## Donate
+
+Please support us if you like this project.
+
+[![Support via Gittip](https://rawgithub.com/twolfson/gittip-badge/0.2.0/dist/gittip.png)](https://www.gittip.com/xpepermint/)
+[![Flattr this git repo](https://flattr.com/_img/icons/flattr_logo_16.png)](https://flattr.com/submit/auto?user_id=Xpepermint&url=https://github.com/xpepermint/yoomjs&title=YoomJS&tags=github&category=software)
 
 
 <!--
@@ -48,6 +71,7 @@ Open your favourite browser and navigate to `http://localhost:3000`. The project
 * deploy to heroku
 * video doc like https://github.com/floatdrop/gulp-watch
 * every task returns stream
+* funding https://pledgie.com/
 
 ## Features
 * on top of express
