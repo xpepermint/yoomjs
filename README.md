@@ -1,13 +1,12 @@
-<div style="text-align: center; padding-bottom: 20px">
-  ![YoomJS](./logo.png)
-
-  ![Build Status](https://travis-ci.org/xpepermint/yoomjs.svg?branch=master)
-  [![NPM version](https://badge.fury.io/js/yoom.svg)](http://badge.fury.io/js/yoom)
-  [![Dependency Status](https://gemnasium.com/xpepermint/yoomjs.svg)](https://gemnasium.com/xpepermint/yoomjs)
+<div style="text-align: center">
+  <img src="https://raw.githubusercontent.com/xpepermint/yoomjs/master/logo.png" />
 </div>
 
-
 # YoomJS - MVC Framework for NodeJS
+
+![Build Status](https://travis-ci.org/xpepermint/yoomjs.svg?branch=master)
+[![NPM version](https://badge.fury.io/js/yoom.svg)](http://badge.fury.io/js/yoom)
+[![Dependency Status](https://gemnasium.com/xpepermint/yoomjs.svg)](https://gemnasium.com/xpepermint/yoomjs)
 
 YoomJS is a next generation web framework for [NodeJS](http://nodejs.org/) built on top of [KoaJS](http://koajs.com/). YoomJS mimics the MVC pattern of frameworks like [Ruby on Rails](http://rubyonrails.org/) which makes writing custom, enterprise-grade [NodeJS](http://nodejs.org/) applications fast and enjoyable.
 
