@@ -30,19 +30,19 @@ After the installation the `yoom` command-line script will be available. Run `yo
 
 Use the `yoom` command to create a new application directory structure.
 
-``` javascript
+```
 yoom new {project-path}
 ```
 
 From `{project-path}` start the application server.
 
-``` javascript
+```
 yoom start
 ```
 
 You can also run open the application in your default browser.
 
-``` javascript
+```
 yoom open
 ```
 
@@ -60,6 +60,9 @@ Please support us if you like this project.
 
 ## TO-DO / NOTES
 
+* yoom --{} parameters for port host...
+* Paths & gloval vars into config.js
+* disable development function for production
 * Run Multiple HTTP instances: http://koajs.com/#app-listen-
 * Node cluster
 * Cookies & session: http://koajs.com/#app-keys-

@@ -15,13 +15,21 @@ var gulpRimraf = require('gulp-rimraf');
 var gulpConcat = require('gulp-concat');
 var gulpRename = require('gulp-rename');
 var utils = require('../lib/utils');
+var gulpCoffee = require('gulp-coffee');
+var gulpSass = require('gulp-less');
+var gulpJade = require('gulp-jade');
+var jsMinify = require('gulp-uglify');
+var cssMinify = require('gulp-minify-css');
+var htmlMinify = require('gulp-minify-html');
 
 // Project's paths.
 var cacheAssets = process.cwd()+'/.cache/public/assets';
 var scriptsPublic = cacheAssets+'/scripts';
 var stylesPublic = cacheAssets+'/styles';
+var viewsPublic = cacheAssets+'/views';
 var scriptsRoot = process.cwd()+'/app/assets/scripts';
 var stylesRoot = process.cwd()+'/app/assets/styles';
+var viewsRoot = process.cwd()+'/app/assets/views';
 
 // Project's assets data.
 var assetsData = require(process.cwd()+'/config/assets');
@@ -114,19 +122,17 @@ var createBundles = function(ext, bundles, from, to) {
 // Predefined compilers for compiling assets. This data can be extended inside
 // project's `gulpfile.js` to enable additional compilers.
 module.exports.compilers = {
-  // handling `coffescript` files
-  '.coffee': function (){ return require('gulp-coffee')() },
-  // handling `less` files
-  '.less': function() { return require('gulp-less')({ paths: 'bower_components/lesshat/build' }) }
+  '.coffee': function (){ return gulpCoffee() },
+  '.less': function() { return gulpSass({ paths: 'bower_components/lesshat/build' }) },
+  '.jade': function() { return gulpJade() }
 };
 
 // Predefined minifiers for assets optimizations. This data can be modified
 // inside project's `gulpfile.js`.
 module.exports.minifiers = {
-  // handling `scripts` files
-  '.js': function() { return require('gulp-uglify')() },
-  // handling `styles` files
-  '.css': function() { return require('gulp-minify-css')() }
+  '.js': function() { return jsMinify() },
+  '.css': function() { return cssMinify() },
+  '.html': function() { return htmlMinify() }
 };
 
 // Deletes compiled assets.
@@ -148,9 +154,15 @@ module.exports.compileStyles = function() {
     createBundles('.css', Object(assetsData.styles), stylesRoot, stylesPublic));
 };
 
+// Compiles `views` assets.
+module.exports.compileViews = function() {
+  return createFiles('.html', viewsRoot, viewsPublic);
+};
+
 // Compiles all assets.
 module.exports.compile = function() {
   return es.merge(
     this.compileScripts(),
-    this.compileStyles());
+    this.compileStyles(),
+    this.compileViews() );
 };
