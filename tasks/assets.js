@@ -17,6 +17,7 @@ var gulpRename = require('gulp-rename');
 var utils = require('../lib/utils');
 var gulpCoffee = require('gulp-coffee');
 var gulpSass = require('gulp-less');
+var gulpSwig = require('gulp-swig');
 var gulpJade = require('gulp-jade');
 var jsMinify = require('gulp-uglify');
 var cssMinify = require('gulp-minify-css');
@@ -35,14 +36,14 @@ var viewsRoot = process.cwd()+'/app/assets/views';
 var assetsData = require(process.cwd()+'/config/assets');
 
 // Returns compiled stream source file. If the provided `source` file has an
-// extension that exists inside `exports.compilers[{ext}]` then the file is send
+// extension that exists inside `exports.renderers[{ext}]` then the file is send
 // through the plugin.
 var src = module.exports.src = function(ext, source) {
   return gulp.src(source).pipe( compiler()).pipe( minifier());
   // Returns a compiler stream.
   function compiler() {
     var sext = path.extname(source);
-    return exports.compilers[sext] ? exports.compilers[sext]() : es.map(function(data, next) { next(null, data) });
+    return exports.renderers[sext] ? exports.renderers[sext]() : es.map(function(data, next) { next(null, data) });
   }
   // Return a minifier stream.
   function minifier() {
@@ -61,9 +62,9 @@ var src = module.exports.src = function(ext, source) {
 //
 var createFiles = function(ext, from, to) {
   var srcs = [];
-  if (!exports.compilers[ext]) srcs.push(src(ext, from+'/**/*'+ext, exports.compilers));
-  Object.keys(exports.compilers).forEach(function(extension) {
-    srcs.push(src(ext, from+'/**/*'+extension, exports.compilers));
+  if (!exports.renderers[ext]) srcs.push(src(ext, from+'/**/*'+ext, exports.renderers));
+  Object.keys(exports.renderers).forEach(function(extension) {
+    srcs.push(src(ext, from+'/**/*'+extension, exports.renderers));
   });
   return es.merge.apply(this, srcs)
     .pipe(gulpRename(function(path) { path.basename = path.basename+'.'+utils.assetsVersion() }))
@@ -92,6 +93,7 @@ var createBundles = function(ext, bundles, from, to) {
     var filePaths = [];
     bundles[bname].forEach(function(source) {
       // where we search for the file
+      // TODO remplace with path.resolve('foo/bar', '/tmp/file/', '..', 'a/../subfile')
       var validPaths = [
         from+'/'+source,
         'bower_components/'+source];
@@ -119,11 +121,12 @@ var createBundles = function(ext, bundles, from, to) {
   return es.merge.apply(this, streams);
 };
 
-// Predefined compilers for compiling assets. This data can be extended inside
-// project's `gulpfile.js` to enable additional compilers.
-module.exports.compilers = {
+// Predefined renderers for compiling assets. This data can be extended inside
+// project's `gulpfile.js` to enable additional renderers.
+module.exports.renderers = {
   '.coffee': function (){ return gulpCoffee() },
   '.less': function() { return gulpSass({ paths: 'bower_components/lesshat/build' }) },
+  '.html': function() { return gulpSwig() },
   '.jade': function() { return gulpJade() }
 };
 
