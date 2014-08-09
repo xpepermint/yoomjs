@@ -60,10 +60,7 @@ Please support us if you like this project.
 
 ## TO-DO / NOTES
 
-* paths(), bowser_components + node_modules, copy other assets dirs
-* Paths & gloval vars into config.js
-* yoom --{} parameters for port host...
-* disable development function for production
+* emit events .on()
 
 * Run Multiple HTTP instances: http://koajs.com/#app-listen-
 * Node cluster
@@ -77,6 +74,8 @@ Please support us if you like this project.
 * video doc like https://github.com/floatdrop/gulp-watch
 * every task returns stream
 * funding https://pledgie.com/
+* add in a docs that you can do `alias node='node --harmony'`
+* caching views (in memory)
 
 ## Features
 * on top of koa

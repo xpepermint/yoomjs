@@ -17,16 +17,20 @@ program
 program
   .command('new <name>')
   .description('create new project')
-  .action(function(name) {
+  .action(function(name, args) {
     require('./yoom/new')(path.resolve(process.cwd(), name));
-  });
+  }).parse(process.argv);
 
 // Starts the application server. This command must be run from project's root
 // folder. The command will load project's specific yoom version.
 program
   .command('start')
+  .option('-i, --hostname <hostname>', 'Set server hostname [marble] (default to `localhost`).')
+  .option('-p, --port <port>', 'Set server port (default to `3000`).')
+  .option('-e, --environment <environment>', 'Set application environment (default to `development`).')
   .description('start the application server')
   .action(function() {
+    console.log(args.port, args.hostname, args.environment);
     require('child_process').spawn("gulp", ['start'], {stdio: "inherit", cwd: process.cwd() });
   });
 

@@ -2,7 +2,7 @@
 
 require("harmonize")();
 var gulp = require('gulp');
-var app = require('yoom/tasks/boot');
+var app = require('yoom/tasks/application');
 var assets = require('yoom/tasks/assets');
 
 // Starts the application server.

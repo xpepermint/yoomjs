@@ -1,41 +1,38 @@
 'use strict';
 
-//
-// BOOT TASKS
-//
-// This file contains tasks related to the **application boot** process. These
-// methods are ment to be triggered by a project's `gulpfile.js`.
-//
-//    gulp.task('start', function() { app.start() });
-//    gulp.task('open', function() { app.open() });
-//
-// Note that `start` task must exist inside project's `gulpfile.js` because the
-// `npm` and `yoom` commands relie on it.
-//
+/**
+ * Module dependencies.
+ */
 
+require('..');
 let gulp = require('gulp');
 let es = require('event-stream');
 let util = require('util');
 let livereload = require('gulp-livereload');
 let openb = require('open');
 let assets = require('./assets');
-let env = process.env.NODE_ENV || 'development';
+let env = process.env.YOOM_ENV;
 
-// After loading assets module, we load project's gulpfile to load possible
-// assets module extensions (e.g. compilers variable definitions).
+/**
+ * After loading assets module, we load project's gulpfile to load possible
+ * assets module extensions (e.g. compilers variable definitions).
+ */
+
 require(process.cwd()+'/gulpfile');
 
-// Starts the application server. We can pass configuration options. See the
-// list of available values bellow.
-//
-//    livereload    ... Automatic browser reloads (set to `true` in development
-//                      and disabled in production by default).
-//    restart       ... Automatic server reloads on application files changes
-//                      (set to `true` in development and disabled in
-//                      production by default).
-//    assets        ... Automatic assets compiling (set to `true` in development
-//                      and disabled in production by default).
-//
+/*
+ * Starts the application server. We can pass configuration options. See the
+ * list of available values bellow.
+ *
+ *    livereload    ... Automatic browser reloads (set to `true` in development
+ *                      and disabled in production by default).
+ *    restart       ... Automatic server reloads on application files changes
+ *                      (set to `true` in development and disabled in
+ *                      production by default).
+ *    assets        ... Automatic assets compiling (set to `true` in development
+ *                      and disabled in production by default).
+ */
+
 module.exports.start = function(options) {
   let cfg = util._extend({
     livereload: env=='development',
@@ -51,7 +48,7 @@ module.exports.start = function(options) {
   // watching assets which can be reloaded withour server restart
   if (cfg.assets) gulp.watch(['app/views/**/*', 'app/assets/**/*', 'public/**/*'], onAssetsChange);
   // watching for server restart event
-  gulp.watch(['.cache/boot.state'], afterServerRestart);
+  gulp.watch(['.cache/application.state'], afterServerRestart);
 
   // starting server
   onServerRestart();
@@ -64,7 +61,7 @@ module.exports.start = function(options) {
     if (server) server.kill();
     // spawn a new child process
     console.log('[yoom] spawning server ...')
-    server = require('child_process').spawn("node", ['--harmony', './config/boot.js'], {stdio: "inherit", cwd: process.cwd() });
+    server = require('child_process').spawn("node", ['--harmony', './config/application.js'], {stdio: "inherit", cwd: process.cwd() });
     // prevent infinite recursion
     process.on('uncaughtException', function(err) {
       console.log(err);
@@ -95,8 +92,11 @@ module.exports.start = function(options) {
   };
 };
 
-// Opens a browser and navigates to applications root address. Optionally we can
-// send a name of our prefered browser as an argument.
+/*
+ * Opens a browser and navigates to applications root address. Optionally we can
+ * send a name of our prefered browser as an argument.
+ */
+
 module.exports.open = function(browser) {
-  openb('http://localhost:3000', browser); // TODO - change data
+  openb('http://'+process.env.YOOM_HTTP_ADDRESS+':'+process.env.YOOM_HTTP_PORT, browser);
 };

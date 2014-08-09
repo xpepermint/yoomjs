@@ -38,18 +38,19 @@ module.exports = function(projectPath) {
     'app/assets/views',
     'app/controllers',
     'app/models',
-    'bin',
     'config',
     'spec',
     'logs',
-    'public',
+    'public'
   ].forEach(function(path) {
     mkdir.sync(projectPath+'/'+path);
     console.log(path);
   });
 
   // copying static files
-  readdirr(templatesPath).forEach(function(filename) {
+  let sources = readdirr(templatesPath);
+  sources.push(['.gitignore', '.editorconfig']);
+  _.flatten(sources).forEach(function(filename) {
     let from = templatesPath+"/"+filename;
     let to = projectPath+"/"+filename;
     // ignoring directories
@@ -62,18 +63,18 @@ module.exports = function(projectPath) {
     }
   });
 
-  //
-  // // installing npm modules
-  // let npm = cp.spawn("npm", ['install'], {stdio: "inherit", cwd: projectPath });
-  //
-  // // installing bowser components
-  // let bower = cp.spawn("bower", ['install'], {stdio: "inherit", cwd: projectPath });
-  //
-  // // killing children in case of error
-  // process.on('uncaughtException', function(err) {
-  //   console.log(err);
-  //   npm.kill();
-  //   bower.kill();
-  //   process.kill();
-  // });
+
+  // installing npm modules
+  let npm = cp.spawn("npm", ['install'], {stdio: "inherit", cwd: projectPath });
+
+  // installing bowser components
+  let bower = cp.spawn("bower", ['install'], {stdio: "inherit", cwd: projectPath });
+
+  // killing children in case of error
+  process.on('uncaughtException', function(err) {
+    console.log(err);
+    npm.kill();
+    bower.kill();
+    process.kill();
+  });
 };

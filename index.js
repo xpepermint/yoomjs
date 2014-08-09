@@ -4,4 +4,4 @@
 // YoomJS
 //
 
-module.exports = require('./lib/boot');
+module.exports = require('./lib/application');

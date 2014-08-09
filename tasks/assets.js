@@ -16,7 +16,7 @@ let gutil = require('gulp-util');
 let gulpRimraf = require('gulp-rimraf');
 let gulpConcat = require('gulp-concat');
 let gulpRename = require('gulp-rename');
-let utils = require('../lib/utils');
+let utils =require('../lib/utils');
 let renderers = require('../lib/renderers');
 let thunk = require('thunkify');
 
@@ -82,7 +82,7 @@ let createFiles = function(ext, from, to) {
   // returning a stream
   return es.merge.apply(this, srcs)
     // attaching file version
-    .pipe(gulpRename(function(file) { file.basename = file.basename+'.'+utils.assetsVersion() }))
+    .pipe(gulpRename(function(file) { file.basename = file.basename+'.'+utils.assets.version }))
     // saving files to the destination
     .pipe(gulp.dest(to));
 };
@@ -109,7 +109,7 @@ let createBundles = function(ext, bundles, from, to) {
     let filePaths = [];
     bundles[bname].forEach(function(source) {
       // where we search for the file
-      let validPaths = [from+'/'+source, 'bower_components/'+source];
+      let validPaths = [from+'/'+source, 'bower_components/'+source, 'node_modules/'+source];
       // looping throughvalid paths
       for (let i in validPaths) {
         // add valid path to filePaths if the path is valid
@@ -132,7 +132,7 @@ let createBundles = function(ext, bundles, from, to) {
       // memorizing asset files streams
       es.merge.apply(this, srcs)
         // merging all asset files to a single file with attached version
-        .pipe(gulpConcat(bname+'.'+utils.assetsVersion()+ext))
+        .pipe(gulpConcat(bname+'.'+utils.assets.version+ext))
         // saving merged file to destination
         .pipe(gulp.dest(to)
     ));

@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "gulp": "3.8.7",
-    "yoom": "0.2.9"
+    "yoom": "0.3.0"
   },
   "devDependencies": {
     "jasmine-node": "1.14.5"
