@@ -3,71 +3,87 @@
 //
 // ASSETS TASKS
 //
-// This module constains tasks for managing the **assets pipeline**. All the
-// tasks returns a `stream` thus every task can be piped further.
+// This module constains tasks for precompiling the **assets pipeline**. All the
+// tasks return a `stream` thus every task can be piped further.
 //
 
-var fs = require('fs');
-var path = require('path');
-var es = require('event-stream');
-var gulp = require('gulp');
-var gulpRimraf = require('gulp-rimraf');
-var gulpConcat = require('gulp-concat');
-var gulpRename = require('gulp-rename');
-var utils = require('../lib/utils');
-var gulpCoffee = require('gulp-coffee');
-var gulpSass = require('gulp-less');
-var gulpSwig = require('gulp-swig');
-var gulpJade = require('gulp-jade');
-var jsMinify = require('gulp-uglify');
-var cssMinify = require('gulp-minify-css');
-var htmlMinify = require('gulp-minify-html');
+let co = require('co');
+let fs = require('fs');
+let path = require('path');
+let es = require('event-stream');
+let gulp = require('gulp');
+let gutil = require('gulp-util');
+let gulpRimraf = require('gulp-rimraf');
+let gulpConcat = require('gulp-concat');
+let gulpRename = require('gulp-rename');
+let utils = require('../lib/utils');
+let renderers = require('../lib/renderers');
+let thunk = require('thunkify');
 
 // Project's paths.
-var cacheAssets = process.cwd()+'/.cache/public/assets';
-var scriptsPublic = cacheAssets+'/scripts';
-var stylesPublic = cacheAssets+'/styles';
-var viewsPublic = cacheAssets+'/views';
-var scriptsRoot = process.cwd()+'/app/assets/scripts';
-var stylesRoot = process.cwd()+'/app/assets/styles';
-var viewsRoot = process.cwd()+'/app/assets/views';
+let projectRoot = process.cwd();
+let cacheAssets = projectRoot+'/.cache/public/assets';
+let scriptsPublic = cacheAssets+'/scripts';
+let stylesPublic = cacheAssets+'/styles';
+let viewsPublic = cacheAssets+'/views';
+let scriptsRoot = projectRoot+'/app/assets/scripts';
+let stylesRoot = projectRoot+'/app/assets/styles';
+let viewsRoot = projectRoot+'/app/assets/views';
 
 // Project's assets data.
-var assetsData = require(process.cwd()+'/config/assets');
+let assetsData = require(projectRoot+'/config/assets');
 
-// Returns compiled stream source file. If the provided `source` file has an
-// extension that exists inside `exports.renderers[{ext}]` then the file is send
-// through the plugin.
-var src = module.exports.src = function(ext, source) {
-  return gulp.src(source).pipe( compiler()).pipe( minifier());
-  // Returns a compiler stream.
-  function compiler() {
-    var sext = path.extname(source);
-    return exports.renderers[sext] ? exports.renderers[sext]() : es.map(function(data, next) { next(null, data) });
-  }
-  // Return a minifier stream.
-  function minifier() {
-    // not minifying bower components
-    var minify = source.indexOf('bower_components') != 0;
-    return minify && exports.minifiers[ext] ? exports.minifiers[ext]() : es.map(function(data, next) { next(null, data) });
-  }
+// Returns compiled source file as stream. This function uses `renderers` for
+// compiling and minimizing the content.
+let src = module.exports.src = function(ext, source) {
+  // returning a stream with converted source file
+  return gulp.src(source).pipe(es.map(function(file, next) {
+    co(function*(){
+      // is external lib (not project's source file)
+      let islib = source.indexOf(projectRoot) != -1;
+      // received file extension
+      let fext = path.extname(file.path);
+      // compiling file content
+      let str;
+      if (renderers.compilers[fext] && islib) str = yield renderers.compilers[fext](file.path, {});
+      else str = yield thunk(fs.readFile)(file.path, 'utf8');
+      // minifying content
+      if (renderers.minifiers[ext] && islib) str = yield renderers.minifiers[ext](str);
+      // changing file's content
+      file.contents = new Buffer(str);
+      // renaming file extension
+      file.path = gutil.replaceExtension(file.path, ext);
+      // return file
+      next(null, file);
+    })();
+  }));
 };
 
-// Returns a stream which recursevly compiles files found at `from` and copy
-// them at `to`.
+// Converts `from` files to `ext` type and saves the compiled and minified files
+// at the provided `to` path.
 //
 //    ext       ... What extension should the files have (e.g. `.js` or `.css`).
-//    from      ... Where to look for files.
-//    to        ... Where to save new files (e.g. `.cache/public/assets`).
+//    from      ... Where to look for source files.
+//    to        ... Where to save converted files (e.g. `.cache/public/assets`).
 //
-var createFiles = function(ext, from, to) {
-  var srcs = [];
-  if (!exports.renderers[ext]) srcs.push(src(ext, from+'/**/*'+ext, exports.renderers));
-  Object.keys(exports.renderers).forEach(function(extension) {
-    srcs.push(src(ext, from+'/**/*'+extension, exports.renderers));
+let createFiles = function(ext, from, to) {
+  // list of source streams
+  let srcs = [];
+  // known extensions
+  let exts = Object.keys(renderers.compilers);
+  exts.push(ext);
+  // looping through known extensions
+  Object.keys(renderers.compilers).forEach(function(extension) {
+    // memorizing the returned stream
+    srcs.push(
+      // creating asset file (stil in memory, saved at `gulp.dest`)
+      src(ext, from+'/**/*'+extension));
   });
+  // returning a stream
   return es.merge.apply(this, srcs)
-    .pipe(gulpRename(function(path) { path.basename = path.basename+'.'+utils.assetsVersion() }))
+    // attaching file version
+    .pipe(gulpRename(function(file) { file.basename = file.basename+'.'+utils.assetsVersion() }))
+    // saving files to the destination
     .pipe(gulp.dest(to));
 };
 
@@ -85,20 +101,17 @@ var createFiles = function(ext, from, to) {
 //                  method will also check the `bower_components` path.
 //    to        ... Where to save new files (e.g. `.cache/public/assets`).
 //
-var createBundles = function(ext, bundles, from, to) {
-  var streams = [];
+let createBundles = function(ext, bundles, from, to) {
+  let streams = [];
   // looping through each defined bundle
   Object.keys(bundles).forEach(function(bname) {
     // creating list of file paths
-    var filePaths = [];
+    let filePaths = [];
     bundles[bname].forEach(function(source) {
       // where we search for the file
-      // TODO remplace with path.resolve('foo/bar', '/tmp/file/', '..', 'a/../subfile')
-      var validPaths = [
-        from+'/'+source,
-        'bower_components/'+source];
+      let validPaths = [from+'/'+source, 'bower_components/'+source];
       // looping throughvalid paths
-      for (var i in validPaths) {
+      for (let i in validPaths) {
         // add valid path to filePaths if the path is valid
         if (fs.existsSync(validPaths[i])) {
           filePaths.push(validPaths[i]);
@@ -107,35 +120,25 @@ var createBundles = function(ext, bundles, from, to) {
       }
     });
     // creating list of source streams (list of files)
-    var srcs = [];
+    let srcs = [];
     filePaths.forEach(function(filePath) {
-      srcs.push(src(ext, filePath));
+      // memorizing the returned stream
+      srcs.push(
+        // creating asset file (stil in memory, saved at `gulp.dest`)
+        src(ext, filePath));
     });
     // creating a bundle stream and memorizing it for later handling
     streams.push(
+      // memorizing asset files streams
       es.merge.apply(this, srcs)
+        // merging all asset files to a single file with attached version
         .pipe(gulpConcat(bname+'.'+utils.assetsVersion()+ext))
-        .pipe(gulp.dest(to)));
+        // saving merged file to destination
+        .pipe(gulp.dest(to)
+    ));
   });
   // returning bundle streams
   return es.merge.apply(this, streams);
-};
-
-// Predefined renderers for compiling assets. This data can be extended inside
-// project's `gulpfile.js` to enable additional renderers.
-module.exports.renderers = {
-  '.coffee': function (){ return gulpCoffee() },
-  '.less': function() { return gulpSass({ paths: 'bower_components/lesshat/build' }) },
-  '.html': function() { return gulpSwig() },
-  '.jade': function() { return gulpJade() }
-};
-
-// Predefined minifiers for assets optimizations. This data can be modified
-// inside project's `gulpfile.js`.
-module.exports.minifiers = {
-  '.js': function() { return jsMinify() },
-  '.css': function() { return cssMinify() },
-  '.html': function() { return htmlMinify() }
 };
 
 // Deletes compiled assets.
@@ -146,8 +149,8 @@ module.exports.clean = function() {
 // Compiles `scripts` assets.
 module.exports.compileScripts = function() {
   return es.merge(
-    createBundles('.js', Object(assetsData.scripts), scriptsRoot, scriptsPublic),
-    createFiles('.js', scriptsRoot, scriptsPublic));
+    createFiles('.js', scriptsRoot, scriptsPublic),
+    createBundles('.js', Object(assetsData.scripts), scriptsRoot, scriptsPublic));
 };
 
 // Compiles `styles` assets.

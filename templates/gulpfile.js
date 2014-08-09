@@ -1,12 +1,9 @@
 'use strict';
 
+require("harmonize")();
 var gulp = require('gulp');
 var app = require('yoom/tasks/boot');
 var assets = require('yoom/tasks/assets');
-
-// assets.compilers['.scss'] = function() {
-//   return require('gulp-sass')({ loadPath: require('node-bourbon').includePaths, cacheLocation: '.cache/sass' })
-// };
 
 // Starts the application server.
 gulp.task('start', function() { app.start() });

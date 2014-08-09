@@ -9,11 +9,11 @@ require('yoom/lib/settings');
 // Assets pipeline.
 require('yoom/lib/assets');
 
-// Request extensions.
-require('yoom/lib/requests');
-
 // Database connectors.
 require('yoom/lib/connectors').connect(function() {
+
+  // Views implementation.
+  require('yoom/lib/views');
 
   // Models implementation.
   require('yoom/lib/models');

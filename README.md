@@ -60,9 +60,11 @@ Please support us if you like this project.
 
 ## TO-DO / NOTES
 
-* yoom --{} parameters for port host...
+* paths(), bowser_components + node_modules, copy other assets dirs
 * Paths & gloval vars into config.js
+* yoom --{} parameters for port host...
 * disable development function for production
+
 * Run Multiple HTTP instances: http://koajs.com/#app-listen-
 * Node cluster
 * Cookies & session: http://koajs.com/#app-keys-
@@ -77,7 +79,7 @@ Please support us if you like this project.
 * funding https://pledgie.com/
 
 ## Features
-* on top of express
+* on top of koa
 * middlewares
 * MVC
 * models
@@ -97,4 +99,13 @@ Please support us if you like this project.
 * streams, gulp
 * default assets coffee, less, lesshat
 * extendable assets pipeline
+* renderers
+* tasks are streams so you can pipe them all
+* API response codes
+- GET, found = 200
+- GET, notfound = 204
+- GET, route not found = 404
+- POST, ok, 201
+- /PUT/DELETE, ok, 200
+- POST/PUT/DELETE, not found, 505
 -->
