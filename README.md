@@ -62,20 +62,21 @@ Please support us if you like this project.
 
 * emit events .on()
 
-* Run Multiple HTTP instances: http://koajs.com/#app-listen-
-* Node cluster
 * Cookies & session: http://koajs.com/#app-keys-
 * Logging: http://koajs.com/#error-handling (winston)
+* caching views (in memory)
+* memory as default db
+
 * HowTo KoaJS: https://github.com/koajs/examples, https://github.com/koajs/workshop
 * Nginx as proxy
 * doc: https://readthedocs.org/
 * deployment: https://www.npmjs.org/package/forever
 * deploy to heroku
 * video doc like https://github.com/floatdrop/gulp-watch
-* every task returns stream
 * funding https://pledgie.com/
 * add in a docs that you can do `alias node='node --harmony'`
-* caching views (in memory)
+* Run Multiple HTTP instances: http://koajs.com/#app-listen-
+* Node cluster
 
 ## Features
 * on top of koa
@@ -87,6 +88,7 @@ Please support us if you like this project.
 * multiple connectors
 * settings
 * mongodb with mongoose
+* we don't want to be limited to the style of database request (different modules, not trying to imitate like waterline because you loos flexability and db features)
 * per-model database connection support
 * command-line generators
 * customize boot
