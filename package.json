@@ -16,7 +16,6 @@
     "co": "3.1.0",
     "coffee-script": "https://registry.npmjs.org/coffee-script/-/coffee-script-1.7.1.tgz",
     "commander": "2.3.0",
-    "delegates": "0.0.3",
     "ejs": "1.0.0",
     "event-stream": "3.1.7",
     "filendir": "0.0.1",

@@ -23,12 +23,7 @@ let thunk = require('thunkify');
 // Project's paths.
 let projectRoot = process.cwd();
 let cacheAssets = projectRoot+'/.cache/public/assets';
-let scriptsPublic = cacheAssets+'/scripts';
-let stylesPublic = cacheAssets+'/styles';
-let viewsPublic = cacheAssets+'/views';
-let scriptsRoot = projectRoot+'/app/assets/scripts';
-let stylesRoot = projectRoot+'/app/assets/styles';
-let viewsRoot = projectRoot+'/app/assets/views';
+let assetsRoot = projectRoot+'/app/assets';
 
 // Project's assets data.
 let assetsData = require(projectRoot+'/config/assets');
@@ -149,20 +144,25 @@ module.exports.clean = function() {
 // Compiles `scripts` assets.
 module.exports.compileScripts = function() {
   return es.merge(
-    createFiles('.js', scriptsRoot, scriptsPublic),
-    createBundles('.js', Object(assetsData.scripts), scriptsRoot, scriptsPublic));
+    createFiles('.js', assetsRoot+'/scripts', cacheAssets+'/scripts'),
+    createBundles('.js', Object(assetsData.scripts), assetsRoot+'/scripts', cacheAssets+'/scripts'));
 };
 
 // Compiles `styles` assets.
 module.exports.compileStyles = function() {
   return es.merge(
-    createFiles('.css', stylesRoot, stylesPublic),
-    createBundles('.css', Object(assetsData.styles), stylesRoot, stylesPublic));
+    createFiles('.css', assetsRoot+'/styles', cacheAssets+'/styles'),
+    createBundles('.css', Object(assetsData.styles), assetsRoot+'/styles', cacheAssets+'/styles'));
 };
 
 // Compiles `views` assets.
 module.exports.compileViews = function() {
-  return createFiles('.html', viewsRoot, viewsPublic);
+  return createFiles('.html', assetsRoot+'/views', cacheAssets+'/views');
+};
+
+// Copy other document to the public assets directory.
+module.exports.copyUnknown = function() {
+  return gulp.src([assetsRoot+'/**/*', '!'+assetsRoot+'/styles', '!'+assetsRoot+'/scripts', '!'+assetsRoot+'/views']).pipe(gulp.dest(cacheAssets));
 };
 
 // Compiles all assets.
@@ -170,5 +170,6 @@ module.exports.compile = function() {
   return es.merge(
     this.compileScripts(),
     this.compileStyles(),
-    this.compileViews() );
+    this.compileViews(),
+    this.copyUnknown() );
 };
