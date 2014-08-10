@@ -1,8 +1,8 @@
 'use strict';
 
-
-// TODO Read arguments as `argv = require('yargs').argv`
-
+/**
+ * Module dependencies.
+ */
 
 let _ = require('underscore');
 let path = require('path');
@@ -11,7 +11,10 @@ let mkdir = require('mkdirp');
 let cp = require('child_process');
 let readdirr = require('fs-readdir-recursive');
 
-// Create application at the given directory `path`.
+/**
+ * Create application at the given directory `path`.
+ */
+
 module.exports = function(projectPath) {
 
   // Path to the template directory.
@@ -46,7 +49,7 @@ module.exports = function(projectPath) {
     'public'
   ].forEach(function(path) {
     mkdir.sync(projectPath+'/'+path);
-    console.log(path);
+    console.log('   created: '+path);
   });
 
   // copying static files

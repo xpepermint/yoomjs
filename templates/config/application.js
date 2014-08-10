@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('yoom')();
+module.exports = require('yoom')().start();

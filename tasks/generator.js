@@ -1,25 +1,31 @@
 'use strict';
 
-/*
- * GENERATORS TASKS
- *
- * This module constains tasks for generating project files from command-line.
+/**
+ * Module dependencies.
  */
 
 let gulp = require('gulp');
 let gulpRename = require('gulp-rename');
-let utils = require('../lib/utils');
+let iutils = require('../lib/utils/inflector');
+
 let projRoot = process.cwd();
 let tplRoot = __dirname+'/../templates';
 
-// Creates a new project file (model, controller, view or test).
+/*
+ * Creates a new project file (model, controller, view or test).
+ *
+ * @param {string} object
+ * @param {string} name
+ * @return {stream}
+ */
+
 module.exports.generate = function(object, name) {
   // source and target extension
   let ext = object == 'view' ? '.html' : '.js';
   // parsing the name of the new filename
-  let tarName = utils.inflactor.toFile(name);
+  let tarName = iutils.toFile(name);
   // directory name of an object
-  let objDir = utils.inflactor.pluralize(utils.inflactor.singularize(object));
+  let objDir = iutils.pluralize(iutils.singularize(object));
   // relative path to destination/source folder
   let tarPath = object == 'test' ? '/test' : '/app/'+objDir;
 

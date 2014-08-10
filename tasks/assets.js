@@ -1,10 +1,7 @@
 'use strict';
 
-/*
- * ASSETS TASKS
- *
- * This module constains tasks for precompiling the **assets pipeline**. All the
- * tasks return a `stream` thus every task can be piped further.
+/**
+ * Module dependencies.
  */
 
 let co = require('co');
@@ -16,21 +13,29 @@ let gutil = require('gulp-util');
 let gulpRimraf = require('gulp-rimraf');
 let gulpConcat = require('gulp-concat');
 let gulpRename = require('gulp-rename');
-let utils =require('../lib/utils');
+let autil =require('../lib/utils/assets');
 let renderers = require('../lib/renderers');
 let thunk = require('thunkify');
 
-// Project's paths.
+/**
+ * Helpers
+ */
+
 let projectRoot = process.cwd();
 let cacheAssets = projectRoot+'/.cache/public/assets';
 let assetsRoot = projectRoot+'/app/assets';
-
-// Project's assets data.
 let assetsData = require(projectRoot+'/config/assets');
 
-// Returns compiled source file as stream. This function uses `renderers` for
-// compiling and minimizing the content.
-let src = module.exports.src = function(ext, source) {
+/*
+ * Returns compiled source file as stream. This function uses `renderers` for
+ * compiling and minimizing the content.
+ *
+ * @param {string} ext
+ * @param {string} source
+ * @return {stream}
+ */
+
+let src = function(ext, source) {
   // returning a stream with converted source file
   return gulp.src(source).pipe(es.map(function(file, next) {
     co(function*(){
@@ -61,7 +66,13 @@ let src = module.exports.src = function(ext, source) {
  *    ext       ... What extension should the files have (e.g. `.js` or `.css`).
  *    from      ... Where to look for source files.
  *    to        ... Where to save converted files (e.g. `.cache/public/assets`).
+ *
+ * @param {string} ext
+ * @param {string} from
+ * @param {string} to
+ * @return {stream}
  */
+
 let createFiles = function(ext, from, to) {
   // list of source streams
   let srcs = [];
@@ -78,7 +89,7 @@ let createFiles = function(ext, from, to) {
   // returning a stream
   return es.merge.apply(this, srcs)
     // attaching file version
-    .pipe(gulpRename(function(file) { file.basename = file.basename+'.'+utils.assets.version }))
+    .pipe(gulpRename(function(file) { file.basename = file.basename+'.'+autil.version }))
     // saving files to the destination
     .pipe(gulp.dest(to));
 };
@@ -97,7 +108,14 @@ let createFiles = function(ext, from, to) {
  *    from      ... Where to look for files. Note that except that path the
  *                  method will also check the `bower_components` path.
  *    to        ... Where to save new files (e.g. `.cache/public/assets`).
+ *
+ * @param {string} ext
+ * @param {Object} bundles
+ * @param {string} from
+ * @param {string} to
+ * @return {stream}
  */
+
 let createBundles = function(ext, bundles, from, to) {
   let streams = [];
   // looping through each defined bundle
@@ -129,7 +147,7 @@ let createBundles = function(ext, bundles, from, to) {
       // memorizing asset files streams
       es.merge.apply(this, srcs)
         // merging all asset files to a single file with attached version
-        .pipe(gulpConcat(bname+'.'+utils.assets.version+ext))
+        .pipe(gulpConcat(bname+'.'+autil.version+ext))
         // saving merged file to destination
         .pipe(gulp.dest(to)
     ));
@@ -138,48 +156,98 @@ let createBundles = function(ext, bundles, from, to) {
   return es.merge.apply(this, streams);
 };
 
-// Deletes compiled assets.
-module.exports.clean = function() {
-  // because of race conditions, we have to move the folder first (TODO other solution?)
-  if (fs.existsSync(cacheAssets)) fs.renameSync(cacheAssets, cacheAssets+'.deleted');
-  return gulp.src(cacheAssets+'.deleted', {read: false}).pipe(gulpRimraf());
-};
+/**
+ * Tasks.
+ */
 
-// Compiles `scripts` assets.
-module.exports.compileScripts = function() {
-  return es.merge(
-    createFiles('.js', assetsRoot+'/scripts', cacheAssets+'/scripts'),
-    createBundles('.js', Object(assetsData.scripts), assetsRoot+'/scripts', cacheAssets+'/scripts'));
-};
+module.exports = {
 
-// Compiles `styles` assets.
-module.exports.compileStyles = function() {
-  return es.merge(
-    createFiles('.css', assetsRoot+'/styles', cacheAssets+'/styles'),
-    createBundles('.css', Object(assetsData.styles), assetsRoot+'/styles', cacheAssets+'/styles'));
-};
+  /*
+   * Deletes compiled assets.
+   *
+   * @return {stream}
+   * @api public
+   */
 
-// Compiles `views` assets.
-module.exports.compileViews = function() {
-  return createFiles('.html', assetsRoot+'/views', cacheAssets+'/views');
-};
+  clean: function() {
+    // because of race conditions, we have to move the folder first (TODO other solution?)
+    if (fs.existsSync(cacheAssets)) fs.renameSync(cacheAssets, cacheAssets+'.deleted');
+    return gulp.src(cacheAssets+'.deleted', {read: false}).pipe(gulpRimraf());
+  },
 
-// Copy other document to the public assets directory.
-module.exports.copyUnknown = function() {
-  return gulp.src([assetsRoot+'/**/*', '!'+assetsRoot+'/styles', '!'+assetsRoot+'/scripts', '!'+assetsRoot+'/views']).pipe(gulp.dest(cacheAssets));
-};
+  /*
+   * Compiles `scripts` assets.
+   *
+   * @return {stream}
+   * @api public
+   */
 
-// Compiles all assets.
-module.exports.compile = function() {
-  return es.merge(
-    this.compileScripts(),
-    this.compileStyles(),
-    this.compileViews(),
-    this.copyUnknown() );
-};
+  compileScripts: function() {
+    return es.merge(
+      createFiles('.js', assetsRoot+'/scripts', cacheAssets+'/scripts'),
+      createBundles('.js', Object(assetsData.scripts), assetsRoot+'/scripts', cacheAssets+'/scripts'));
+  },
 
-// Cleans the assets directory and recompiles all assets.
-module.exports.build = function() {
-  this.clean();
-  return this.compile();
+  /*
+   * Compiles `styles` assets.
+   *
+   * @return {stream}
+   * @api public
+   */
+
+  compileStyles: function() {
+    return es.merge(
+      createFiles('.css', assetsRoot+'/styles', cacheAssets+'/styles'),
+      createBundles('.css', Object(assetsData.styles), assetsRoot+'/styles', cacheAssets+'/styles'));
+  },
+
+  /*
+   * Compiles `views` assets.
+   *
+   * @return {stream}
+   * @api public
+   */
+
+  compileViews: function() {
+    return createFiles('.html', assetsRoot+'/views', cacheAssets+'/views');
+  },
+
+  /*
+   * Copy other document to the public assets directory.
+   *
+   * @return {stream}
+   * @api public
+   */
+
+  copyUnknown: function() {
+    return gulp.src([assetsRoot+'/**/*', '!'+assetsRoot+'/styles', '!'+assetsRoot+'/scripts', '!'+assetsRoot+'/views']).pipe(gulp.dest(cacheAssets));
+  },
+
+  /*
+   * Compiles all assets.
+   *
+   * @return {stream}
+   * @api public
+   */
+
+  compile: function() {
+    return es.merge(
+      this.compileScripts(),
+      this.compileStyles(),
+      this.compileViews(),
+      this.copyUnknown() );
+  },
+
+  /*
+   * Cleans the assets directory and recompiles all assets.
+   *
+   * @return {stream}
+   * @api public
+   */
+
+  build: function() {
+    this.clean();
+    return this.compile();
+  }
+
 };
