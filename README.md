@@ -67,9 +67,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## TO-DO / NOTES
 
+* upgrade mongoose to use utils.inflactors
 * emit events .on()
+* I18n, add functions for date, string, arrays manipulation to ctx
+* global yoom command-line re-run local ./node_modules/bin/yoom command (versions)
 
-* Cookies & session: http://koajs.com/#app-keys-
 * Logging: http://koajs.com/#error-handling (winston)
 * caching views (in memory)
 * memory as default db
@@ -84,6 +86,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 * add in a docs that you can do `alias node='node --harmony'`
 * Run Multiple HTTP instances: http://koajs.com/#app-listen-
 * Node cluster
+* mongoose PR: https://github.com/LearnBoost/mongoose/issues/2231
+* socket.io
 
 ## Features
 * on top of koa

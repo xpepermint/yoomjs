@@ -5,6 +5,7 @@
 
 
 let _ = require('underscore');
+let path = require('path');
 let fs = require('fs');
 let mkdir = require('mkdirp');
 let cp = require('child_process');
@@ -18,7 +19,7 @@ module.exports = function(projectPath) {
 
   // defining variables that will be replaced in templates
   let vars = {
-    'name': _.last(projectPath.split('/')).toLowerCase()
+    'name': _.last(path.sep(projectPath)).toLowerCase()
   };
 
   // Returns parsed string with embeded `vars`.
@@ -55,7 +56,8 @@ module.exports = function(projectPath) {
     let to = projectPath+"/"+filename;
     // ignoring directories
     if (['.DS_Store'].indexOf(filename) == -1 && fs.statSync(from).isFile()) {
-      console.log(to);
+      // display created file
+      console.log('   created: '+to);
       // reading source file content
       let fromSrc = parser(fs.readFileSync(from, 'utf-8'));
       // writing content to new destination

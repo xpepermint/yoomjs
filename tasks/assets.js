@@ -1,11 +1,11 @@
 'use strict';
 
-//
-// ASSETS TASKS
-//
-// This module constains tasks for precompiling the **assets pipeline**. All the
-// tasks return a `stream` thus every task can be piped further.
-//
+/*
+ * ASSETS TASKS
+ *
+ * This module constains tasks for precompiling the **assets pipeline**. All the
+ * tasks return a `stream` thus every task can be piped further.
+ */
 
 let co = require('co');
 let fs = require('fs');
@@ -54,13 +54,14 @@ let src = module.exports.src = function(ext, source) {
   }));
 };
 
-// Converts `from` files to `ext` type and saves the compiled and minified files
-// at the provided `to` path.
-//
-//    ext       ... What extension should the files have (e.g. `.js` or `.css`).
-//    from      ... Where to look for source files.
-//    to        ... Where to save converted files (e.g. `.cache/public/assets`).
-//
+/*
+ * Converts `from` files to `ext` type and saves the compiled and minified files
+ * at the provided `to` path.
+ *
+ *    ext       ... What extension should the files have (e.g. `.js` or `.css`).
+ *    from      ... Where to look for source files.
+ *    to        ... Where to save converted files (e.g. `.cache/public/assets`).
+ */
 let createFiles = function(ext, from, to) {
   // list of source streams
   let srcs = [];
@@ -82,20 +83,21 @@ let createFiles = function(ext, from, to) {
     .pipe(gulp.dest(to));
 };
 
-// Returns a stream which creates compiled bundles. A bundle is a file where
-// multiple files are merged into one single file. Method requires 4 parameters.
-//
-//    ext       ... What extension should the files have (e.g. `.js` or `.css`).
-//    bundles   ... Object of arrays with of files to merge. The object bellow
-//                  will create a file `{to}/all.{ext}` with the content of
-//                  all files listed.
-//
-//                   { 'all': ['test.coffee', 'angular/angular.js'] }
-//
-//    from      ... Where to look for files. Note that except that path the
-//                  method will also check the `bower_components` path.
-//    to        ... Where to save new files (e.g. `.cache/public/assets`).
-//
+/*
+ * Returns a stream which creates compiled bundles. A bundle is a file where
+ * multiple files are merged into one single file. Method requires 4 parameters.
+ *
+ *    ext       ... What extension should the files have (e.g. `.js` or `.css`).
+ *    bundles   ... Object of arrays with of files to merge. The object bellow
+ *                  will create a file `{to}/all.{ext}` with the content of
+ *                  all files listed.
+ *
+ *                   { 'all': ['test.coffee', 'angular/angular.js'] }
+ *
+ *    from      ... Where to look for files. Note that except that path the
+ *                  method will also check the `bower_components` path.
+ *    to        ... Where to save new files (e.g. `.cache/public/assets`).
+ */
 let createBundles = function(ext, bundles, from, to) {
   let streams = [];
   // looping through each defined bundle
@@ -138,7 +140,9 @@ let createBundles = function(ext, bundles, from, to) {
 
 // Deletes compiled assets.
 module.exports.clean = function() {
-  return gulp.src(cacheAssets, {read: false}).pipe(gulpRimraf());
+  // because of race conditions, we have to move the folder first (TODO other solution?)
+  if (fs.existsSync(cacheAssets)) fs.renameSync(cacheAssets, cacheAssets+'.deleted');
+  return gulp.src(cacheAssets+'.deleted', {read: false}).pipe(gulpRimraf());
 };
 
 // Compiles `scripts` assets.
@@ -172,4 +176,10 @@ module.exports.compile = function() {
     this.compileStyles(),
     this.compileViews(),
     this.copyUnknown() );
+};
+
+// Cleans the assets directory and recompiles all assets.
+module.exports.build = function() {
+  this.clean();
+  return this.compile();
 };

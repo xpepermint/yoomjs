@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-require('..');
+require('..'); // to load `process.env`
 let gulp = require('gulp');
 let es = require('event-stream');
 let util = require('util');
@@ -12,13 +12,6 @@ let livereload = require('gulp-livereload');
 let openb = require('open');
 let assets = require('./assets');
 let env = process.env.YOOM_ENV;
-
-/**
- * After loading assets module, we load project's gulpfile to load possible
- * assets module extensions (e.g. compilers variable definitions).
- */
-
-require(process.cwd()+'/gulpfile');
 
 /*
  * Starts the application server. We can pass configuration options. See the
@@ -59,9 +52,11 @@ module.exports.start = function(options) {
   function onServerRestart(e) {
     // kill the child process if the application has already been started
     if (server) server.kill();
-    // spawn a new child process
-    console.log('[yoom] spawning server ...')
-    server = require('child_process').spawn("node", ['--harmony', './config/application.js'], {stdio: "inherit", cwd: process.cwd() });
+    // sponing new process
+    let argv =  process.argv;
+    process.argv[0] = '--harmony';
+    process.argv[1] = './config/application.js';
+    server = require('child_process').spawn(process.execPath, argv, {stdio: "inherit", cwd: process.cwd() });
     // prevent infinite recursion
     process.on('uncaughtException', function(err) {
       console.log(err);
