@@ -79,7 +79,7 @@ program
 program
   .command('build')
   .alias('b')
-  .description('precompile application assets')
+  .description('Precompile application assets.')
   .action(function(args) {
     tass.build();
   });
@@ -91,7 +91,7 @@ program
 program
   .command('clean')
   .alias('c')
-  .description('remove application assets')
+  .description('Remove application assets.')
   .action(function(args) {
     tass.clean();
   });
@@ -103,20 +103,29 @@ program
 program
   .command('open')
   .alias('o')
-  .description('open application in browser')
+  .description('Open application in browser.')
   .action(function() {
     tapp.open()
   });
 
-// TODO Starts the application tests. This command must be run from project's root
-// folder. The command will load project's specific yoom version.
-// program
-//   .command('test')
-//   .alias('t')
-//   .description('run application specs')
-//   .action(function() {
-//     require('child_process').spawn("gulp", ['test'], {stdio: "inherit", cwd: process.cwd() });
-//   });
+/*
+ * Runs the application tests. This command must be run from project's root
+ * folder. The command will load project's specific yoom version.
+ */
+
+program
+  .command('test [path]')
+  .alias('t')
+  .description('Run application specs.')
+  .option('-a, --autotest [enable]', 'Rerun automatically when a spec changes.')
+  .option('-V, --verbose [enable]', 'Print extra information per each test run.')
+  .action(function(path, args) {
+    let opts = [];
+    if (args.autotest != undefined) opts.push('--autotest');
+    if (args.verbose != undefined) opts.push('--verbose');
+    opts.push(path || process.cwd()+'/spec');
+    require('child_process').spawn(__dirname+"/../node_modules/.bin/jasmine-node", opts, {stdio: "inherit", cwd: process.cwd() });
+  });
 
 /*
  * Unknown command handling.
