@@ -112,6 +112,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 * default assets coffee, less, lesshat
 * extendable assets pipeline
 * renderers
+* session, cookies
 * tasks are streams so you can pipe them all
 * API response codes
 - GET, found = 200

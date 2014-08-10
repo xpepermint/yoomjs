@@ -1,7 +1,7 @@
 'use strict';
 
-//
-// YoomJS
-//
+/**
+ * Application class.
+ */
 
 module.exports = require('./lib/application');

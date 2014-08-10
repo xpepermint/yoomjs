@@ -11,15 +11,15 @@ let mkdir = require('mkdirp');
 let cp = require('child_process');
 let readdirr = require('fs-readdir-recursive');
 
-// Path to the template directory.
-const templatesPath = __dirname+'/../../templates';
-
 // Create application at the given directory `path`.
 module.exports = function(projectPath) {
 
+  // Path to the template directory.
+  let templatesPath = __dirname+'/../../templates';
+
   // defining variables that will be replaced in templates
   let vars = {
-    'name': _.last(path.sep(projectPath)).toLowerCase()
+    'name': _.last(projectPath.split(path.sep)).toLowerCase()
   };
 
   // Returns parsed string with embeded `vars`.
@@ -39,6 +39,7 @@ module.exports = function(projectPath) {
     'app/assets/views',
     'app/controllers',
     'app/models',
+    'app/views',
     'config',
     'spec',
     'logs',
@@ -49,13 +50,13 @@ module.exports = function(projectPath) {
   });
 
   // copying static files
-  let sources = readdirr(templatesPath);
-  sources.push(['.gitignore', '.editorconfig']);
-  _.flatten(sources).forEach(function(filename) {
+  readdirr(templatesPath).forEach(function(filename) {
     let from = templatesPath+"/"+filename;
     let to = projectPath+"/"+filename;
     // ignoring directories
     if (['.DS_Store'].indexOf(filename) == -1 && fs.statSync(from).isFile()) {
+      // renaming '_.' files to '.' (ignored by default)
+      to = to.replace('/_.', '/.');
       // display created file
       console.log('   created: '+to);
       // reading source file content
@@ -64,7 +65,6 @@ module.exports = function(projectPath) {
       fs.writeFileSync(to, fromSrc);
     }
   });
-
 
   // installing npm modules
   let npm = cp.spawn("npm", ['install'], {stdio: "inherit", cwd: projectPath });

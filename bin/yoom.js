@@ -8,18 +8,15 @@
 let path = require('path');
 let fs = require('fs');
 let program = require('commander');
-let tapp = require('../tasks/application');
-let tgen = require('../tasks/generator');
-let tass = require('../tasks/assets');
 
 // Is in root folder?
-const inProjectRoot = fs.existsSync(process.cwd()+'/node_modules/yoom');
+let inProjectRoot = fs.existsSync(process.cwd()+'/node_modules/yoom');
 
 /*
  * Displyas the project's current version.
  */
 
-const packageData = require(inProjectRoot ? process.cwd()+'/node_modules/yoom/package' : '../package')
+let packageData = require(inProjectRoot ? process.cwd()+'/node_modules/yoom/package' : '../package')
 program
   .version(packageData.version, '-v, --version');
 
@@ -43,7 +40,7 @@ program
   .alias('g')
   .description('start the application server')
   .action(function(object, type) {
-    tgen.generate(object, type);
+    require('../tasks/generator').generate(object, type);
   });
 
 /*
@@ -69,7 +66,7 @@ program
     if (args.livereload != undefined) opts.livereload = args.livereload!='false';
     if (args.restart != undefined) opts.restart = args.restart!='false';
     if (args.assets != undefined) opts.assets = args.assets!='false';
-    tapp.start(opts);
+    require('../tasks/application').start(opts);
   });
 
 /*
@@ -81,7 +78,7 @@ program
   .alias('b')
   .description('Precompile application assets.')
   .action(function(args) {
-    tass.build();
+    require('../tasks/assets').build();
   });
 
 /*
@@ -93,7 +90,7 @@ program
   .alias('c')
   .description('Remove application assets.')
   .action(function(args) {
-    tass.clean();
+    require('../tasks/assets').clean();
   });
 
 /*
@@ -105,7 +102,7 @@ program
   .alias('o')
   .description('Open application in browser.')
   .action(function() {
-    tapp.open()
+    require('../tasks/application').open()
   });
 
 /*

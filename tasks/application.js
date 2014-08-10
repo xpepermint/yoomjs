@@ -1,16 +1,20 @@
 'use strict';
 
 /**
+ * Application configuration loading.
+ */
+
+require('../lib/boot');
+
+/**
  * Module dependencies.
  */
 
-require('..'); // to load `process.env`
 let gulp = require('gulp');
 let es = require('event-stream');
 let util = require('util');
 let livereload = require('gulp-livereload');
 let openb = require('open');
-let assets = require('./assets');
 let env = process.env.YOOM_ENV;
 
 /*
@@ -82,7 +86,7 @@ module.exports.start = function(options) {
     // removing assets cache directory
     require('rimraf')(process.cwd()+'/.cache/public/assets', function() {
       // compiling assets and reloading browser
-      assets.compile().on('end', onLivereload);
+      require('./assets').compile().on('end', onLivereload);
     });
   };
 };
